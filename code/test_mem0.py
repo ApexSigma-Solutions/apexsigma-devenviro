@@ -22,13 +22,17 @@ def test_mem0_setup():
         memory = Memory.from_config(config)
         print("✅ Mem0 initialized with Qdrant backend")
 
-        # Check for OpenAI API key
-        api_key = os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            print("⚠️  OPENAI_API_KEY not set")
-            print("   Set it to enable memory operations")
-        else:
+        # Check for API keys (OpenAI or OpenRouter)
+        openai_key = os.getenv("OPENAI_API_KEY")
+        openrouter_key = os.getenv("OPENROUTER_API_KEY")
+        
+        if openrouter_key:
+            print("✅ OPENROUTER_API_KEY configured")
+        elif openai_key:
             print("✅ OPENAI_API_KEY configured")
+        else:
+            print("⚠️  No API key set (OPENAI_API_KEY or OPENROUTER_API_KEY)")
+            print("   Set one to enable AI-powered memory operations")
 
         return True
 

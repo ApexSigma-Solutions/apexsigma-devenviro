@@ -1,0 +1,72 @@
+﻿2025-07-14T20:51:59.4404995Z ##[group]Run cd docs
+2025-07-14T20:51:59.4405259Z [36;1mcd docs[0m
+2025-07-14T20:51:59.4405442Z [36;1mmake html[0m
+2025-07-14T20:51:59.4435521Z shell: /usr/bin/bash -e {0}
+2025-07-14T20:51:59.4435940Z env:
+2025-07-14T20:51:59.4436194Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:51:59.4436615Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib/pkgconfig
+2025-07-14T20:51:59.4437032Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:51:59.4437393Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:51:59.4437760Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:51:59.4438131Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib
+2025-07-14T20:51:59.4438427Z ##[endgroup]
+2025-07-14T20:51:59.7276592Z [01mRunning Sphinx v8.2.3[39;49;00m
+2025-07-14T20:51:59.7285125Z [01mloading translations [en]... [39;49;00mdone
+2025-07-14T20:52:00.3228713Z [91mWARNING: html_static_path entry '_static' does not exist[39;49;00m
+2025-07-14T20:52:00.3339517Z [01mbuilding [mo]: [39;49;00mtargets for 0 po files that are out of date
+2025-07-14T20:52:00.3340321Z [01mwriting output... [39;49;00m
+2025-07-14T20:52:00.3356479Z [01mbuilding [html]: [39;49;00mtargets for 7 source files that are out of date
+2025-07-14T20:52:00.3363281Z [01mupdating environment: [39;49;00m[new config] 7 added, 0 changed, 0 removed
+2025-07-14T20:52:00.4663653Z [2K[01mreading sources... [39;49;00m[ 14%] [35mapi[39;49;00m
+2025-07-14T20:52:00.4909083Z [2K[01mreading sources... [39;49;00m[ 29%] [35mdeployment[39;49;00m
+2025-07-14T20:52:00.4990678Z [2K[01mreading sources... [39;49;00m[ 43%] [35mindex[39;49;00m
+2025-07-14T20:52:00.5106946Z [2K[01mreading sources... [39;49;00m[ 57%] [35minstallation[39;49;00m
+2025-07-14T20:52:00.5257302Z [2K[01mreading sources... [39;49;00m[ 71%] [35mquickstart[39;49;00m
+2025-07-14T20:52:00.5520858Z [2K[01mreading sources... [39;49;00m[ 86%] [35msecurity[39;49;00m
+2025-07-14T20:52:00.5705551Z [2K[01mreading sources... [39;49;00m[100%] [35mtesting[39;49;00m
+2025-07-14T20:52:00.5708096Z [91mWARNING: autodoc: failed to import module 'test_mem0'; the following exception was raised:
+2025-07-14T20:52:00.5729060Z ['Traceback (most recent call last):\n', '  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/sphinx/ext/autodoc/importer.py", line 175, in import_module\n    module = importlib.import_module(modname)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/importlib/__init__.py", line 126, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import\n', '  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load\n', '  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked\n', '  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked\n', '  File "<frozen importlib._bootstrap_external>", line 936, in exec_module\n', '  File "<frozen importlib._bootstrap_external>", line 1074, in get_code\n', '  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code\n', '  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed\n', '  File "/home/runner/work/apexsigma-devenviro/apexsigma-devenviro/code/test_mem0.py", line 43\n', '    EOF < /dev/null\n', '          ^\n', 'SyntaxError: invalid syntax\n', '\nThe above exception was the direct cause of the following exception:\n\n', 'Traceback (most recent call last):\n', '  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/sphinx/ext/autodoc/importer.py", line 269, in import_object\n    module = import_module(modname, try_reload=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/sphinx/ext/autodoc/importer.py", line 187, in import_module\n    raise ImportError(exc, traceback.format_exc()) from exc\n', 'ImportError: (SyntaxError(\'invalid syntax\', (\'/home/runner/work/apexsigma-devenviro/apexsigma-devenviro/code/test_mem0.py\', 43, 7, \'EOF < /dev/null\\n\', 43, 8)), \'Traceback (most recent call last):\\n  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/sphinx/ext/autodoc/importer.py", line 175, in import_module\\n    module = importlib.import_module(modname)\\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/importlib/__init__.py", line 126, in import_module\\n    return _bootstrap._gcd_import(name[level:], package, level)\\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import\\n  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load\\n  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked\\n  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked\\n  File "<frozen importlib._bootstrap_external>", line 936, in exec_module\\n  File "<frozen importlib._bootstrap_external>", line 1074, in get_code\\n  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code\\n  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed\\n  File "/home/runner/work/apexsigma-devenviro/apexsigma-devenviro/code/test_mem0.py", line 43\\n    EOF < /dev/null\\n          ^\\nSyntaxError: invalid syntax\\n\')\n'] [autodoc.import_object][39;49;00m
+2025-07-14T20:52:00.5746554Z [91mWARNING: autodoc: failed to import module 'test_linear_wsl2'; the following exception was raised:
+2025-07-14T20:52:00.5755764Z ['Traceback (most recent call last):\n', '  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/sphinx/ext/autodoc/importer.py", line 269, in import_object\n    module = import_module(modname, try_reload=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/sphinx/ext/autodoc/importer.py", line 175, in import_module\n    module = importlib.import_module(modname)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/importlib/__init__.py", line 126, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n', '  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import\n', '  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load\n', '  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked\n', '  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked\n', '  File "<frozen importlib._bootstrap_external>", line 940, in exec_module\n', '  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed\n', '  File "/home/runner/work/apexsigma-devenviro/apexsigma-devenviro/code/test_linear_wsl2.py", line 9, in <module>\n    from dotenv import load_dotenv\n', "ModuleNotFoundError: No module named 'dotenv'\n"] [autodoc.import_object][39;49;00m
+2025-07-14T20:52:00.5763949Z [91m/home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/security.rst:2: WARNING: Title underline too short.
+2025-07-14T20:52:00.5764803Z 
+2025-07-14T20:52:00.5764945Z Security Guidelines
+2025-07-14T20:52:00.5765381Z ================== [docutils][39;49;00m
+2025-07-14T20:52:00.5766734Z [91m/home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/security.rst:233: WARNING: Title underline too short.
+2025-07-14T20:52:00.5767567Z 
+2025-07-14T20:52:00.5767700Z Regular Maintenance
+2025-07-14T20:52:00.5768130Z ~~~~~~~~~~~~~~~~~~ [docutils][39;49;00m
+2025-07-14T20:52:00.5769263Z [91m/home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/security.rst:233: WARNING: Title underline too short.
+2025-07-14T20:52:00.5770116Z 
+2025-07-14T20:52:00.5770253Z Regular Maintenance
+2025-07-14T20:52:00.5770712Z ~~~~~~~~~~~~~~~~~~ [docutils][39;49;00m
+2025-07-14T20:52:00.5771646Z [01mlooking for now-outdated files... [39;49;00mnone found
+2025-07-14T20:52:00.5772315Z [01mpickling environment... [39;49;00mdone
+2025-07-14T20:52:00.5772877Z [01mchecking consistency... [39;49;00mdone
+2025-07-14T20:52:00.5773407Z [01mpreparing documents... [39;49;00mdone
+2025-07-14T20:52:00.5773893Z [01mcopying assets... [39;49;00m
+2025-07-14T20:52:00.5774363Z [01mcopying static files... [39;49;00m
+2025-07-14T20:52:00.5921405Z Writing evaluated template result to /home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/_build/html/_static/documentation_options.js
+2025-07-14T20:52:00.5947020Z Writing evaluated template result to /home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/_build/html/_static/language_data.js
+2025-07-14T20:52:00.5978332Z Writing evaluated template result to /home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/_build/html/_static/basic.css
+2025-07-14T20:52:00.6102548Z Writing evaluated template result to /home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/_build/html/_static/js/versions.js
+2025-07-14T20:52:00.6162352Z [01mcopying static files: [39;49;00mdone
+2025-07-14T20:52:00.6162987Z [01mcopying extra files... [39;49;00m
+2025-07-14T20:52:00.6163567Z [01mcopying extra files: [39;49;00mdone
+2025-07-14T20:52:00.6164076Z [01mcopying assets: [39;49;00mdone
+2025-07-14T20:52:00.6751222Z [2K[01mwriting output... [39;49;00m[ 14%] [32mapi[39;49;00m
+2025-07-14T20:52:00.7886424Z [2K[01mwriting output... [39;49;00m[ 29%] [32mdeployment[39;49;00m
+2025-07-14T20:52:00.8031049Z [2K[01mwriting output... [39;49;00m[ 43%] [32mindex[39;49;00m
+2025-07-14T20:52:00.8182204Z [2K[01mwriting output... [39;49;00m[ 57%] [32minstallation[39;49;00m
+2025-07-14T20:52:00.8366596Z [2K[01mwriting output... [39;49;00m[ 71%] [32mquickstart[39;49;00m
+2025-07-14T20:52:00.8674449Z [2K[01mwriting output... [39;49;00m[ 86%] [32msecurity[39;49;00m
+2025-07-14T20:52:00.9008511Z [2K[01mwriting output... [39;49;00m[100%] [32mtesting[39;49;00m
+2025-07-14T20:52:00.9256100Z [01mgenerating indices... [39;49;00mgenindex py-modindex done
+2025-07-14T20:52:00.9313813Z [2K[01mhighlighting module code... [39;49;00m[ 50%] [94mproject_status[39;49;00m
+2025-07-14T20:52:00.9396115Z [2K[01mhighlighting module code... [39;49;00m[100%] [94mtest_wsl2_setup[39;49;00m
+2025-07-14T20:52:00.9496863Z [01mwriting additional pages... [39;49;00msearch done
+2025-07-14T20:52:00.9518393Z [01mdumping search index in English (code: en)... [39;49;00mdone
+2025-07-14T20:52:00.9523655Z [01mdumping object inventory... [39;49;00mdone
+2025-07-14T20:52:00.9525856Z [01mbuild succeeded, 6 warnings.[39;49;00m
+2025-07-14T20:52:00.9526229Z 
+2025-07-14T20:52:00.9527067Z The HTML pages are in _build/html.

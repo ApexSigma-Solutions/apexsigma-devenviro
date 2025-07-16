@@ -1,0 +1,69 @@
+﻿2025-07-14T20:51:42.6839425Z ##[group]Run actions/checkout@v4
+2025-07-14T20:51:42.6840378Z with:
+2025-07-14T20:51:42.6840894Z   repository: ApexSigma-Solutions/apexsigma-devenviro
+2025-07-14T20:51:42.6841714Z   token: ***
+2025-07-14T20:51:42.6842121Z   ssh-strict: true
+2025-07-14T20:51:42.6842694Z   ssh-user: git
+2025-07-14T20:51:42.6843278Z   persist-credentials: true
+2025-07-14T20:51:42.6843755Z   clean: true
+2025-07-14T20:51:42.6844198Z   sparse-checkout-cone-mode: true
+2025-07-14T20:51:42.6844713Z   fetch-depth: 1
+2025-07-14T20:51:42.6845135Z   fetch-tags: false
+2025-07-14T20:51:42.6845547Z   show-progress: true
+2025-07-14T20:51:42.6846167Z   lfs: false
+2025-07-14T20:51:42.6846573Z   submodules: false
+2025-07-14T20:51:42.6847023Z   set-safe-directory: true
+2025-07-14T20:51:42.6847807Z ##[endgroup]
+2025-07-14T20:51:42.7970892Z Syncing repository: ApexSigma-Solutions/apexsigma-devenviro
+2025-07-14T20:51:42.7972960Z ##[group]Getting Git version info
+2025-07-14T20:51:42.7973878Z Working directory is '/home/runner/work/apexsigma-devenviro/apexsigma-devenviro'
+2025-07-14T20:51:42.7975117Z [command]/usr/bin/git version
+2025-07-14T20:51:42.8009687Z git version 2.50.1
+2025-07-14T20:51:42.8037583Z ##[endgroup]
+2025-07-14T20:51:42.8052777Z Temporarily overriding HOME='/home/runner/work/_temp/dc30b0b9-1f7d-4833-a98f-cc30a6ab3d03' before making global git config changes
+2025-07-14T20:51:42.8054340Z Adding repository directory to the temporary git global config as a safe directory
+2025-07-14T20:51:42.8066715Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/apexsigma-devenviro/apexsigma-devenviro
+2025-07-14T20:51:42.8105351Z Deleting the contents of '/home/runner/work/apexsigma-devenviro/apexsigma-devenviro'
+2025-07-14T20:51:42.8108977Z ##[group]Initializing the repository
+2025-07-14T20:51:42.8113382Z [command]/usr/bin/git init /home/runner/work/apexsigma-devenviro/apexsigma-devenviro
+2025-07-14T20:51:42.8182603Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-07-14T20:51:42.8184566Z hint: is subject to change. To configure the initial branch name to use in all
+2025-07-14T20:51:42.8186204Z hint: of your new repositories, which will suppress this warning, call:
+2025-07-14T20:51:42.8186985Z hint:
+2025-07-14T20:51:42.8187508Z hint: 	git config --global init.defaultBranch <name>
+2025-07-14T20:51:42.8188147Z hint:
+2025-07-14T20:51:42.8188759Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-07-14T20:51:42.8189765Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-07-14T20:51:42.8190865Z hint:
+2025-07-14T20:51:42.8191501Z hint: 	git branch -m <name>
+2025-07-14T20:51:42.8191985Z hint:
+2025-07-14T20:51:42.8192635Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-07-14T20:51:42.8193846Z Initialized empty Git repository in /home/runner/work/apexsigma-devenviro/apexsigma-devenviro/.git/
+2025-07-14T20:51:42.8197128Z [command]/usr/bin/git remote add origin https://github.com/ApexSigma-Solutions/apexsigma-devenviro
+2025-07-14T20:51:42.8230634Z ##[endgroup]
+2025-07-14T20:51:42.8231406Z ##[group]Disabling automatic garbage collection
+2025-07-14T20:51:42.8234862Z [command]/usr/bin/git config --local gc.auto 0
+2025-07-14T20:51:42.8267011Z ##[endgroup]
+2025-07-14T20:51:42.8268400Z ##[group]Setting up auth
+2025-07-14T20:51:42.8275216Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-07-14T20:51:42.8308601Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-07-14T20:51:42.8586831Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-07-14T20:51:42.8619076Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-07-14T20:51:42.8844517Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-07-14T20:51:42.8880266Z ##[endgroup]
+2025-07-14T20:51:42.8881084Z ##[group]Fetching the repository
+2025-07-14T20:51:42.8898462Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f5b99953c87ec4428d3887766d45f9fbd0bc84db:refs/remotes/origin/main
+2025-07-14T20:51:43.0866860Z From https://github.com/ApexSigma-Solutions/apexsigma-devenviro
+2025-07-14T20:51:43.0868569Z  * [new ref]         f5b99953c87ec4428d3887766d45f9fbd0bc84db -> origin/main
+2025-07-14T20:51:43.0891154Z ##[endgroup]
+2025-07-14T20:51:43.0891902Z ##[group]Determining the checkout info
+2025-07-14T20:51:43.0893285Z ##[endgroup]
+2025-07-14T20:51:43.0898543Z [command]/usr/bin/git sparse-checkout disable
+2025-07-14T20:51:43.0938625Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-07-14T20:51:43.0966473Z ##[group]Checking out the ref
+2025-07-14T20:51:43.0970196Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-07-14T20:51:43.1037547Z Switched to a new branch 'main'
+2025-07-14T20:51:43.1040220Z branch 'main' set up to track 'origin/main'.
+2025-07-14T20:51:43.1046528Z ##[endgroup]
+2025-07-14T20:51:43.1081490Z [command]/usr/bin/git log -1 --format=%H
+2025-07-14T20:51:43.1104830Z f5b99953c87ec4428d3887766d45f9fbd0bc84db

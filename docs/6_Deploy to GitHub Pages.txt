@@ -1,0 +1,168 @@
+﻿2025-07-14T20:52:01.0889263Z ##[group]Run peaceiris/actions-gh-pages@v4
+2025-07-14T20:52:01.0889568Z with:
+2025-07-14T20:52:01.0890081Z   github_token: ***
+2025-07-14T20:52:01.0890286Z   publish_dir: ./docs/_build/html
+2025-07-14T20:52:01.0890513Z   force_orphan: true
+2025-07-14T20:52:01.0890714Z   publish_branch: gh-pages
+2025-07-14T20:52:01.0890929Z   allow_empty_commit: false
+2025-07-14T20:52:01.0891126Z   keep_files: false
+2025-07-14T20:52:01.0891308Z   enable_jekyll: false
+2025-07-14T20:52:01.0891494Z   disable_nojekyll: false
+2025-07-14T20:52:01.0891694Z   exclude_assets: .github
+2025-07-14T20:52:01.0891876Z env:
+2025-07-14T20:52:01.0892101Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:52:01.0892491Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib/pkgconfig
+2025-07-14T20:52:01.0892874Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:52:01.0893216Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:52:01.0893548Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-07-14T20:52:01.0893931Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib
+2025-07-14T20:52:01.0894219Z ##[endgroup]
+2025-07-14T20:52:01.1532212Z [INFO] Usage https://github.com/peaceiris/actions-gh-pages#readme
+2025-07-14T20:52:01.1537910Z ##[group]Dump inputs
+2025-07-14T20:52:01.1538291Z [INFO] GithubToken: true
+2025-07-14T20:52:01.1538563Z [INFO] PublishBranch: gh-pages
+2025-07-14T20:52:01.1538946Z [INFO] PublishDir: ./docs/_build/html
+2025-07-14T20:52:01.1539265Z [INFO] DestinationDir: 
+2025-07-14T20:52:01.1539508Z [INFO] ExternalRepository: 
+2025-07-14T20:52:01.1539771Z [INFO] AllowEmptyCommit: false
+2025-07-14T20:52:01.1540025Z [INFO] KeepFiles: false
+2025-07-14T20:52:01.1540254Z [INFO] ForceOrphan: true
+2025-07-14T20:52:01.1540474Z [INFO] UserName: 
+2025-07-14T20:52:01.1540681Z [INFO] UserEmail: 
+2025-07-14T20:52:01.1540895Z [INFO] CommitMessage: 
+2025-07-14T20:52:01.1541230Z [INFO] FullCommitMessage: 
+2025-07-14T20:52:01.1541535Z [INFO] TagName: 
+2025-07-14T20:52:01.1541889Z [INFO] TagMessage: 
+2025-07-14T20:52:01.1542133Z [INFO] EnableJekyll (DisableNoJekyll): false
+2025-07-14T20:52:01.1542420Z [INFO] CNAME: 
+2025-07-14T20:52:01.1542630Z [INFO] ExcludeAssets .github
+2025-07-14T20:52:01.1542792Z 
+2025-07-14T20:52:01.1543093Z ##[endgroup]
+2025-07-14T20:52:01.1543600Z ##[group]Setup auth token
+2025-07-14T20:52:01.1543975Z [INFO] setup GITHUB_TOKEN
+2025-07-14T20:52:01.1544934Z ##[endgroup]
+2025-07-14T20:52:01.1545371Z ##[group]Prepare publishing assets
+2025-07-14T20:52:01.1549792Z [INFO] ForceOrphan: true
+2025-07-14T20:52:01.1570682Z [INFO] chdir /home/runner/actions_github_pages_1752526321154
+2025-07-14T20:52:01.1602663Z [command]/usr/bin/git init
+2025-07-14T20:52:01.1656685Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-07-14T20:52:01.1657598Z hint: is subject to change. To configure the initial branch name to use in all
+2025-07-14T20:52:01.1658450Z hint: of your new repositories, which will suppress this warning, call:
+2025-07-14T20:52:01.1659400Z hint:
+2025-07-14T20:52:01.1659811Z hint: 	git config --global init.defaultBranch <name>
+2025-07-14T20:52:01.1660307Z hint:
+2025-07-14T20:52:01.1660774Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-07-14T20:52:01.1661623Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-07-14T20:52:01.1662267Z hint:
+2025-07-14T20:52:01.1662601Z hint: 	git branch -m <name>
+2025-07-14T20:52:01.1663011Z hint:
+2025-07-14T20:52:01.1663532Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-07-14T20:52:01.1674570Z Initialized empty Git repository in /home/runner/actions_github_pages_1752526321154/.git/
+2025-07-14T20:52:01.1698119Z [command]/usr/bin/git checkout --orphan gh-pages
+2025-07-14T20:52:01.1722572Z Switched to a new branch 'gh-pages'
+2025-07-14T20:52:01.1728441Z [INFO] prepare publishing assets
+2025-07-14T20:52:01.1729535Z [INFO] copy /home/runner/work/apexsigma-devenviro/apexsigma-devenviro/docs/_build/html to /home/runner/actions_github_pages_1752526321154
+2025-07-14T20:52:01.2033918Z [INFO] delete excluded assets
+2025-07-14T20:52:01.2068729Z rm: no paths given
+2025-07-14T20:52:01.2071807Z ##[endgroup]
+2025-07-14T20:52:01.2072382Z ##[group]Setup Git config
+2025-07-14T20:52:01.2087847Z [command]/usr/bin/git remote rm origin
+2025-07-14T20:52:01.2114939Z error: No such remote: 'origin'
+2025-07-14T20:52:01.2121258Z [INFO] The process '/usr/bin/git' failed with exit code 2
+2025-07-14T20:52:01.2134936Z [command]/usr/bin/git remote add origin ***github.com/ApexSigma-Solutions/apexsigma-devenviro.git
+2025-07-14T20:52:01.2178597Z [command]/usr/bin/git add --all
+2025-07-14T20:52:01.4252483Z [command]/usr/bin/git config user.name SteynSean11
+2025-07-14T20:52:01.4296955Z [command]/usr/bin/git config user.email SteynSean11@users.noreply.github.com
+2025-07-14T20:52:01.4326310Z ##[endgroup]
+2025-07-14T20:52:01.4326941Z ##[group]Create a commit
+2025-07-14T20:52:01.4340266Z [command]/usr/bin/git commit -m deploy: f5b99953c87ec4428d3887766d45f9fbd0bc84db
+2025-07-14T20:52:01.4730367Z [gh-pages (root-commit) ef6572e] deploy: f5b99953c87ec4428d3887766d45f9fbd0bc84db
+2025-07-14T20:52:01.4731184Z  82 files changed, 9788 insertions(+)
+2025-07-14T20:52:01.4731629Z  create mode 100644 .buildinfo
+2025-07-14T20:52:01.4732008Z  create mode 100644 .nojekyll
+2025-07-14T20:52:01.4732323Z  create mode 100644 _modules/index.html
+2025-07-14T20:52:01.4732664Z  create mode 100644 _modules/project_status.html
+2025-07-14T20:52:01.4733030Z  create mode 100644 _modules/test_wsl2_setup.html
+2025-07-14T20:52:01.4733367Z  create mode 100644 _sources/api.rst.txt
+2025-07-14T20:52:01.4733684Z  create mode 100644 _sources/deployment.rst.txt
+2025-07-14T20:52:01.4734012Z  create mode 100644 _sources/index.rst.txt
+2025-07-14T20:52:01.4734337Z  create mode 100644 _sources/installation.rst.txt
+2025-07-14T20:52:01.4734676Z  create mode 100644 _sources/quickstart.rst.txt
+2025-07-14T20:52:01.4735008Z  create mode 100644 _sources/security.rst.txt
+2025-07-14T20:52:01.4735363Z  create mode 100644 _sources/testing.rst.txt
+2025-07-14T20:52:01.4736272Z  create mode 100644 _static/_sphinx_javascript_frameworks_compat.js
+2025-07-14T20:52:01.4736819Z  create mode 100644 _static/basic.css
+2025-07-14T20:52:01.4737118Z  create mode 100644 _static/css/badge_only.css
+2025-07-14T20:52:01.4737491Z  create mode 100644 _static/css/fonts/Roboto-Slab-Bold.woff
+2025-07-14T20:52:01.4737918Z  create mode 100644 _static/css/fonts/Roboto-Slab-Bold.woff2
+2025-07-14T20:52:01.4738396Z  create mode 100644 _static/css/fonts/Roboto-Slab-Regular.woff
+2025-07-14T20:52:01.4738958Z  create mode 100644 _static/css/fonts/Roboto-Slab-Regular.woff2
+2025-07-14T20:52:01.4739404Z  create mode 100644 _static/css/fonts/fontawesome-webfont.eot
+2025-07-14T20:52:01.4739953Z  create mode 100644 _static/css/fonts/fontawesome-webfont.svg
+2025-07-14T20:52:01.4740412Z  create mode 100644 _static/css/fonts/fontawesome-webfont.ttf
+2025-07-14T20:52:01.4740924Z  create mode 100644 _static/css/fonts/fontawesome-webfont.woff
+2025-07-14T20:52:01.4741593Z  create mode 100644 _static/css/fonts/fontawesome-webfont.woff2
+2025-07-14T20:52:01.4742068Z  create mode 100644 _static/css/fonts/lato-bold-italic.woff
+2025-07-14T20:52:01.4742534Z  create mode 100644 _static/css/fonts/lato-bold-italic.woff2
+2025-07-14T20:52:01.4743033Z  create mode 100644 _static/css/fonts/lato-bold.woff
+2025-07-14T20:52:01.4743480Z  create mode 100644 _static/css/fonts/lato-bold.woff2
+2025-07-14T20:52:01.4743883Z  create mode 100644 _static/css/fonts/lato-normal-italic.woff
+2025-07-14T20:52:01.4744288Z  create mode 100644 _static/css/fonts/lato-normal-italic.woff2
+2025-07-14T20:52:01.4744725Z  create mode 100644 _static/css/fonts/lato-normal.woff
+2025-07-14T20:52:01.4745146Z  create mode 100644 _static/css/fonts/lato-normal.woff2
+2025-07-14T20:52:01.4745436Z  create mode 100644 _static/css/theme.css
+2025-07-14T20:52:01.4745954Z  create mode 100644 _static/doctools.js
+2025-07-14T20:52:01.4746227Z  create mode 100644 _static/documentation_options.js
+2025-07-14T20:52:01.4746751Z  create mode 100644 _static/file.png
+2025-07-14T20:52:01.4747021Z  create mode 100644 _static/fonts/Lato/lato-bold.eot
+2025-07-14T20:52:01.4747461Z  create mode 100644 _static/fonts/Lato/lato-bold.ttf
+2025-07-14T20:52:01.4747760Z  create mode 100644 _static/fonts/Lato/lato-bold.woff
+2025-07-14T20:52:01.4748176Z  create mode 100644 _static/fonts/Lato/lato-bold.woff2
+2025-07-14T20:52:01.4748529Z  create mode 100644 _static/fonts/Lato/lato-bolditalic.eot
+2025-07-14T20:52:01.4748940Z  create mode 100644 _static/fonts/Lato/lato-bolditalic.ttf
+2025-07-14T20:52:01.4749270Z  create mode 100644 _static/fonts/Lato/lato-bolditalic.woff
+2025-07-14T20:52:01.4749612Z  create mode 100644 _static/fonts/Lato/lato-bolditalic.woff2
+2025-07-14T20:52:01.4750066Z  create mode 100644 _static/fonts/Lato/lato-italic.eot
+2025-07-14T20:52:01.4750466Z  create mode 100644 _static/fonts/Lato/lato-italic.ttf
+2025-07-14T20:52:01.4750773Z  create mode 100644 _static/fonts/Lato/lato-italic.woff
+2025-07-14T20:52:01.4751191Z  create mode 100644 _static/fonts/Lato/lato-italic.woff2
+2025-07-14T20:52:01.4751630Z  create mode 100644 _static/fonts/Lato/lato-regular.eot
+2025-07-14T20:52:01.4751929Z  create mode 100644 _static/fonts/Lato/lato-regular.ttf
+2025-07-14T20:52:01.4752237Z  create mode 100644 _static/fonts/Lato/lato-regular.woff
+2025-07-14T20:52:01.4752555Z  create mode 100644 _static/fonts/Lato/lato-regular.woff2
+2025-07-14T20:52:01.4752915Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-bold.eot
+2025-07-14T20:52:01.4753306Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-bold.ttf
+2025-07-14T20:52:01.4753708Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-bold.woff
+2025-07-14T20:52:01.4754109Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-bold.woff2
+2025-07-14T20:52:01.4754510Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-regular.eot
+2025-07-14T20:52:01.4754917Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-regular.ttf
+2025-07-14T20:52:01.4755331Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-regular.woff
+2025-07-14T20:52:01.4756299Z  create mode 100644 _static/fonts/RobotoSlab/roboto-slab-v7-regular.woff2
+2025-07-14T20:52:01.4756646Z  create mode 100644 _static/jquery.js
+2025-07-14T20:52:01.4756912Z  create mode 100644 _static/js/badge_only.js
+2025-07-14T20:52:01.4757169Z  create mode 100644 _static/js/theme.js
+2025-07-14T20:52:01.4757412Z  create mode 100644 _static/js/versions.js
+2025-07-14T20:52:01.4757684Z  create mode 100644 _static/language_data.js
+2025-07-14T20:52:01.4757935Z  create mode 100644 _static/minus.png
+2025-07-14T20:52:01.4758180Z  create mode 100644 _static/plus.png
+2025-07-14T20:52:01.4758420Z  create mode 100644 _static/pygments.css
+2025-07-14T20:52:01.4758685Z  create mode 100644 _static/searchtools.js
+2025-07-14T20:52:01.4758956Z  create mode 100644 _static/sphinx_highlight.js
+2025-07-14T20:52:01.4759223Z  create mode 100644 api.html
+2025-07-14T20:52:01.4759444Z  create mode 100644 deployment.html
+2025-07-14T20:52:01.4759835Z  create mode 100644 genindex.html
+2025-07-14T20:52:01.4760063Z  create mode 100644 index.html
+2025-07-14T20:52:01.4760276Z  create mode 100644 installation.html
+2025-07-14T20:52:01.4760509Z  create mode 100644 objects.inv
+2025-07-14T20:52:01.4760724Z  create mode 100644 py-modindex.html
+2025-07-14T20:52:01.4760961Z  create mode 100644 quickstart.html
+2025-07-14T20:52:01.4761175Z  create mode 100644 search.html
+2025-07-14T20:52:01.4761387Z  create mode 100644 searchindex.js
+2025-07-14T20:52:01.4761606Z  create mode 100644 security.html
+2025-07-14T20:52:01.4761826Z  create mode 100644 testing.html
+2025-07-14T20:52:01.4762635Z ##[endgroup]
+2025-07-14T20:52:01.4763193Z ##[group]Push the commit or tag
+2025-07-14T20:52:01.4763660Z [command]/usr/bin/git push origin --force gh-pages
+2025-07-14T20:52:01.6686007Z remote: Permission to ApexSigma-Solutions/apexsigma-devenviro.git denied to github-actions[bot].
+2025-07-14T20:52:01.6687392Z fatal: unable to access 'https://github.com/ApexSigma-Solutions/apexsigma-devenviro.git/': The requested URL returned error: 403
+2025-07-14T20:52:01.6724783Z ##[error]Action failed with "The process '/usr/bin/git' failed with exit code 128"

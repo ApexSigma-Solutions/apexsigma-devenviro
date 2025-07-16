@@ -1,0 +1,39 @@
+﻿2025-07-14T20:51:41.5679047Z Current runner version: '2.326.0'
+2025-07-14T20:51:41.5716173Z ##[group]Runner Image Provisioner
+2025-07-14T20:51:41.5717745Z Hosted Compute Agent
+2025-07-14T20:51:41.5718789Z Version: 20250711.363
+2025-07-14T20:51:41.5720016Z Commit: 6785254374ce925a23743850c1cb91912ce5c14c
+2025-07-14T20:51:41.5721190Z Build Date: 2025-07-11T20:04:25Z
+2025-07-14T20:51:41.5722304Z ##[endgroup]
+2025-07-14T20:51:41.5723329Z ##[group]Operating System
+2025-07-14T20:51:41.5724322Z Ubuntu
+2025-07-14T20:51:41.5725205Z 24.04.2
+2025-07-14T20:51:41.5726552Z LTS
+2025-07-14T20:51:41.5727412Z ##[endgroup]
+2025-07-14T20:51:41.5728334Z ##[group]Runner Image
+2025-07-14T20:51:41.5729407Z Image: ubuntu-24.04
+2025-07-14T20:51:41.5730397Z Version: 20250710.1.0
+2025-07-14T20:51:41.5732537Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250710.1/images/ubuntu/Ubuntu2404-Readme.md
+2025-07-14T20:51:41.5735130Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250710.1
+2025-07-14T20:51:41.5737510Z ##[endgroup]
+2025-07-14T20:51:41.5739483Z ##[group]GITHUB_TOKEN Permissions
+2025-07-14T20:51:41.5742646Z Contents: read
+2025-07-14T20:51:41.5743608Z Metadata: read
+2025-07-14T20:51:41.5744541Z Packages: read
+2025-07-14T20:51:41.5746139Z ##[endgroup]
+2025-07-14T20:51:41.5749906Z Secret source: Actions
+2025-07-14T20:51:41.5751025Z Prepare workflow directory
+2025-07-14T20:51:41.6251227Z Prepare all required actions
+2025-07-14T20:51:41.6311973Z Getting action download info
+2025-07-14T20:51:41.9306714Z ##[group]Download immutable action package 'actions/checkout@v4'
+2025-07-14T20:51:41.9307782Z Version: 4.2.2
+2025-07-14T20:51:41.9308815Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
+2025-07-14T20:51:41.9310031Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
+2025-07-14T20:51:41.9310732Z ##[endgroup]
+2025-07-14T20:51:42.0198323Z ##[group]Download immutable action package 'actions/setup-python@v4'
+2025-07-14T20:51:42.0199227Z Version: 4.9.1
+2025-07-14T20:51:42.0199943Z Digest: sha256:f03e505388af670b5a108629e0ba26befc08d5c62b41f46146a45fe29ae509a5
+2025-07-14T20:51:42.0200963Z Source commit SHA: 7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
+2025-07-14T20:51:42.0201630Z ##[endgroup]
+2025-07-14T20:51:42.2567057Z Download action repository 'peaceiris/actions-gh-pages@v4' (SHA:4f9cc6602d3f66b9c108549d475ec49e8ef4d45e)
+2025-07-14T20:51:42.6144614Z Complete job name: docs
