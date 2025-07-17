@@ -8,8 +8,8 @@ import os
 import json
 import asyncio
 import logging
-from datetime import datetime
-from typing import Dict, List, Optional, Any
+from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Any, Union
 from pathlib import Path
 import hashlib
 import uuid
@@ -35,6 +35,7 @@ except ImportError:
     asyncpg = None
 
 from dotenv import load_dotenv
+import numpy as np
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

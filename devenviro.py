@@ -1,12 +1,32 @@
 #!/usr/bin/env python3
 """
 ApexSigma DevEnviro - Cognitive Collaboration Platform
-Main entry point for the DevEnviro memory system
+Seamless startup for cognitive collaboration across any project or workspace
+
+Usage:
+  devenviro                        # Auto-detect mode (current project)
+  devenviro test                   # Run system test
+  devenviro extract <text>         # Extract memory from text
+  devenviro search <query>         # Search organizational memory
+  devenviro health                 # Check system health
+  devenviro stats                  # Show performance statistics
+  devenviro global                 # Initialize global workspace
+  devenviro project                # Initialize project workspace
+  devenviro new project <name>     # Create new project workspace
+  devenviro min                    # Minimal initialization
+  devenviro full                   # Full system initialization
+  devenviro install                # Install system-wide
+  devenviro --help                 # Show all options
 """
 
+import os
 import sys
 import asyncio
+import time
+import argparse
+import json
 from pathlib import Path
+from datetime import datetime
 
 # Add the devenviro directory to the Python path
 sys.path.insert(0, str(Path(__file__).parent / "devenviro"))
@@ -18,8 +38,130 @@ from gemini_memory_engine import (
     get_gemini_memory_engine
 )
 
+class DevEnviroManager:
+    """Enhanced DevEnviro manager with auto-detection and comprehensive initialization"""
+    
+    def __init__(self):
+        self.script_dir = Path(__file__).parent
+        self.working_dir = Path.cwd()
+        self.global_devenviro = Path.home() / ".devenviro"
+        self.mode = self._determine_mode()
+        self.context = {}
+    
+    def _determine_mode(self):
+        """Determine initialization mode based on environment"""
+        if (self.working_dir / ".devenviro").exists():
+            return "project_auto"
+        elif (self.working_dir / "devenviro").exists():
+            return "devenviro_auto"
+        elif self.global_devenviro.exists():
+            return "global_auto"
+        else:
+            return "workspace"
+    
+    def print_header(self, mode="auto"):
+        """Print startup header with mode info"""
+        print("=" * 75)
+        print("  APEXSIGMA DEVENVIRO - COGNITIVE COLLABORATION PLATFORM")
+        print("=" * 75)
+        print(f"[MODE] {mode.upper()}")
+        print(f"[TIME] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"[WORKSPACE] {self.working_dir}")
+        print()
+    
+    def check_environment(self):
+        """Check environment and API keys"""
+        print("[ENV] Checking environment...")
+        
+        # Check Gemini API key
+        gemini_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+        if gemini_key and len(gemini_key) > 20:
+            print("[OK] Gemini API key configured")
+        else:
+            print("[WARN] Gemini API key not found")
+            print("[FIX] Set GEMINI_API_KEY environment variable")
+        
+        # Check Qdrant
+        try:
+            import requests
+            response = requests.get("http://localhost:6333/collections", timeout=3)
+            if response.status_code == 200:
+                collections = response.json()
+                count = len(collections.get("result", {}).get("collections", []))
+                print(f"[OK] Qdrant vector database ({count} collections)")
+            else:
+                print(f"[WARN] Qdrant status: {response.status_code}")
+        except Exception:
+            print("[INFO] Qdrant not available - vector search disabled")
+            print("[OPTIONAL] Start with: docker run -p 6333:6333 qdrant/qdrant")
+        
+        return True
+    
+    def load_context(self):
+        """Load context files for cognitive collaboration"""
+        print("[CONTEXT] Loading context files...")
+        
+        context_files = {
+            "CLAUDE.md": "Claude strategic agent instructions",
+            "README.md": "Project documentation",
+            ".devenviro/config.json": "DevEnviro configuration"
+        }
+        
+        loaded_count = 0
+        for file_path, description in context_files.items():
+            full_path = self.working_dir / file_path
+            if full_path.exists():
+                try:
+                    size = full_path.stat().st_size
+                    loaded_count += 1
+                    print(f"[OK] {file_path} ({size/1024:.1f}KB)")
+                    self.context[file_path] = full_path.read_text(encoding='utf-8')
+                except Exception as e:
+                    print(f"[WARN] Could not load {file_path}: {e}")
+        
+        if loaded_count > 0:
+            print(f"[SUCCESS] Loaded {loaded_count} context files")
+        else:
+            print("[INFO] No context files found")
+        
+        return True
+
 async def main():
     """Main entry point for DevEnviro"""
+    manager = DevEnviroManager()
+    
+    # If no arguments, run auto-detection
+    if len(sys.argv) == 1:
+        manager.print_header(manager.mode)
+        manager.check_environment()
+        manager.load_context()
+        
+        try:
+            engine = GeminiMemoryEngine()
+            await engine.initialize()
+            health = await engine.health_check()
+            
+            print("[SYSTEM] DevEnviro Status:")
+            for component, status in health.items():
+                print(f"  {component}: {status}")
+            
+            print(f"\n[SUCCESS] DevEnviro ready in {manager.mode} mode")
+            print("[COMMANDS] Available commands:")
+            print("  devenviro health     # Check system health")
+            print("  devenviro search     # Search project memory")
+            print("  devenviro extract    # Extract and store memories")
+            print("  devenviro stats      # Show performance statistics")
+            print("  devenviro global     # Initialize global workspace")
+            print("  devenviro project    # Initialize project workspace")
+            print("  devenviro full       # Full system initialization")
+            
+        except Exception as e:
+            print(f"[ERROR] Memory system initialization failed: {e}")
+            print("[INFO] Basic workspace mode available")
+        
+        return
+    
+    # Handle specific commands
     if len(sys.argv) < 2:
         print("DevEnviro - Cognitive Collaboration Platform")
         print("Usage:")
@@ -246,7 +388,6 @@ async def create_new_project():
     project_dir.mkdir(exist_ok=True)
     
     # Change to project directory
-    import os
     os.chdir(project_dir)
     
     # Initialize project workspace
@@ -453,7 +594,6 @@ def detect_project_type(project_path: Path) -> str:
 
 def cli_main():
     """Console script entry point"""
-    import json
     asyncio.run(main())
 
 if __name__ == "__main__":
