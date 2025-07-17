@@ -451,6 +451,10 @@ def detect_project_type(project_path: Path) -> str:
     else:
         return "Generic"
 
-if __name__ == "__main__":
+def cli_main():
+    """Console script entry point"""
     import json
     asyncio.run(main())
+
+if __name__ == "__main__":
+    cli_main()
