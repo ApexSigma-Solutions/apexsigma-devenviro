@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevEnviro Memory Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+        }
+        .gradient-bg { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+        .memory-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        .memory-card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); 
+        }
+        .status-healthy { color: #10b981; }
+        .status-degraded { color: #f59e0b; }
+        .status-error { color: #ef4444; }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen" x-data="dashboard()">
+    <!-- Navigation -->
+    <nav class="glass p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-brain text-white text-2xl"></i>
+                <h1 class="text-white text-xl font-bold">DevEnviro Memory Dashboard</h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="/" class="text-white hover:text-blue-300 transition">Dashboard</a>
+                <a href="/search" class="text-white hover:text-blue-300 transition">Search</a>
+                <a href="/analytics" class="text-white hover:text-blue-300 transition">Analytics</a>
+                <a href="/extract" class="text-white hover:text-blue-300 transition">Extract</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 space-y-6">
+        <!-- System Status -->
+        <div class="glass rounded-lg p-6 text-white">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+                <i class="fas fa-heartbeat mr-3"></i>
+                System Health
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" x-show="healthData">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-circle" :class="getStatusClass(healthData?.overall_status)"></i>
+                    <span>Overall: <span x-text="healthData?.overall_status || 'Unknown'"></span></span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-circle" :class="getStatusClass(healthData?.memory_engine?.gemini)"></i>
+                    <span>Gemini Engine: <span x-text="healthData?.memory_engine?.gemini || 'Unknown'"></span></span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-circle" :class="getStatusClass(healthData?.memory_bridge?.qdrant)"></i>
+                    <span>Vector Store: <span x-text="healthData?.memory_bridge?.qdrant || 'Unknown'"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="memory-card glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-memory text-4xl mb-3 text-blue-300"></i>
+                <h3 class="text-lg font-semibold">Total Memories</h3>
+                <p class="text-3xl font-bold" x-text="stats?.total_memories || '0'"></p>
+            </div>
+            <div class="memory-card glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-search text-4xl mb-3 text-green-300"></i>
+                <h3 class="text-lg font-semibold">Searches</h3>
+                <p class="text-3xl font-bold" x-text="stats?.performance_stats?.searches || '0'"></p>
+            </div>
+            <div class="memory-card glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-upload text-4xl mb-3 text-purple-300"></i>
+                <h3 class="text-lg font-semibold">Extractions</h3>
+                <p class="text-3xl font-bold" x-text="stats?.performance_stats?.extractions || '0'"></p>
+            </div>
+            <div class="memory-card glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-tachometer-alt text-4xl mb-3 text-yellow-300"></i>
+                <h3 class="text-lg font-semibold">Avg Response</h3>
+                <p class="text-2xl font-bold" x-text="(stats?.performance_stats?.average_response_time_ms || 0).toFixed(0) + 'ms'"></p>
+            </div>
+        </div>
+
+        <!-- Memory Categories Chart -->
+        <div class="glass rounded-lg p-6 text-white">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+                <i class="fas fa-chart-pie mr-3"></i>
+                Memory Distribution by Category
+            </h2>
+            <div class="h-96">
+                <canvas id="categoriesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="memory-card glass rounded-lg p-6 text-white">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-search mr-3 text-blue-300"></i>
+                    Quick Search
+                </h3>
+                <form @submit.prevent="quickSearch()" class="space-y-3">
+                    <input 
+                        type="text" 
+                        x-model="quickSearchQuery"
+                        placeholder="Search memories..." 
+                        class="w-full p-3 rounded-lg bg-white bg-opacity-20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    >
+                    <button 
+                        type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-lg font-semibold transition"
+                    >
+                        Search
+                    </button>
+                </form>
+                <div x-show="quickSearchResults.length > 0" class="mt-4 space-y-2 max-h-40 overflow-y-auto">
+                    <template x-for="result in quickSearchResults.slice(0, 3)">
+                        <div class="text-sm p-2 bg-white bg-opacity-10 rounded">
+                            <span class="font-semibold" x-text="result.category"></span>: 
+                            <span x-text="result.text.substring(0, 80) + '...'"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="memory-card glass rounded-lg p-6 text-white">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-plus mr-3 text-green-300"></i>
+                    Quick Store
+                </h3>
+                <form @submit.prevent="quickStore()" class="space-y-3">
+                    <textarea 
+                        x-model="quickStoreContent"
+                        placeholder="Enter content to memorize..." 
+                        rows="3"
+                        class="w-full p-3 rounded-lg bg-white bg-opacity-20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
+                    ></textarea>
+                    <select 
+                        x-model="quickStoreCategory"
+                        class="w-full p-3 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-green-400"
+                    >
+                        <option value="general">General</option>
+                        <option value="factual">Factual</option>
+                        <option value="procedural">Procedural</option>
+                        <option value="organizational">Organizational</option>
+                        <option value="architectural">Architectural</option>
+                    </select>
+                    <button 
+                        type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 p-3 rounded-lg font-semibold transition"
+                    >
+                        Store Memory
+                    </button>
+                </form>
+            </div>
+
+            <div class="memory-card glass rounded-lg p-6 text-white">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-cogs mr-3 text-purple-300"></i>
+                    Performance Metrics
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between">
+                        <span>Total Operations:</span>
+                        <span class="font-bold" x-text="stats?.performance_stats?.total_operations || '0'"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Success Rate:</span>
+                        <span class="font-bold text-green-300" x-text="((1 - (stats?.performance_stats?.error_rate || 0)) * 100).toFixed(1) + '%'"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Model:</span>
+                        <span class="font-bold text-blue-300" x-text="stats?.performance_stats?.model || 'Unknown'"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Stores:</span>
+                        <span class="font-bold" x-text="stats?.performance_stats?.stores || '0'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass rounded-lg p-6 text-white">
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+                <i class="fas fa-clock mr-3"></i>
+                Recent Activity
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <template x-for="activity in stats?.recent_activity || []">
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4 text-center">
+                        <i class="fas" :class="getActivityIcon(activity.type) + ' text-2xl mb-2'"></i>
+                        <h4 class="font-semibold capitalize" x-text="activity.type"></h4>
+                        <p class="text-2xl font-bold" x-text="activity.count"></p>
+                        <p class="text-sm opacity-75" x-text="activity.timestamp"></p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function dashboard() {
+            return {
+                stats: null,
+                healthData: null,
+                quickSearchQuery: '',
+                quickSearchResults: [],
+                quickStoreContent: '',
+                quickStoreCategory: 'general',
+                categoriesChart: null,
+
+                async init() {
+                    await this.loadStats();
+                    await this.loadHealth();
+                    this.initCategoriesChart();
+                    // Refresh every 30 seconds
+                    setInterval(() => {
+                        this.loadStats();
+                        this.loadHealth();
+                    }, 30000);
+                },
+
+                async loadStats() {
+                    try {
+                        const response = await fetch('/api/dashboard/stats');
+                        this.stats = await response.json();
+                        this.updateCategoriesChart();
+                    } catch (error) {
+                        console.error('Failed to load stats:', error);
+                    }
+                },
+
+                async loadHealth() {
+                    try {
+                        const response = await fetch('/api/system/health');
+                        this.healthData = await response.json();
+                    } catch (error) {
+                        console.error('Failed to load health:', error);
+                    }
+                },
+
+                async quickSearch() {
+                    if (!this.quickSearchQuery.trim()) return;
+                    
+                    try {
+                        const response = await fetch('/api/memory/search', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                query: this.quickSearchQuery,
+                                limit: 5 
+                            })
+                        });
+                        const data = await response.json();
+                        this.quickSearchResults = data.results || [];
+                    } catch (error) {
+                        console.error('Search failed:', error);
+                    }
+                },
+
+                async quickStore() {
+                    if (!this.quickStoreContent.trim()) return;
+                    
+                    try {
+                        const response = await fetch('/api/memory/store', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                content: this.quickStoreContent,
+                                category: this.quickStoreCategory
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.quickStoreContent = '';
+                            this.loadStats(); // Refresh stats
+                            alert('Memory stored successfully!');
+                        }
+                    } catch (error) {
+                        console.error('Store failed:', error);
+                    }
+                },
+
+                getStatusClass(status) {
+                    if (status === 'healthy') return 'status-healthy';
+                    if (status === 'degraded') return 'status-degraded';
+                    return 'status-error';
+                },
+
+                getActivityIcon(type) {
+                    const icons = {
+                        search: 'fa-search',
+                        extraction: 'fa-brain',
+                        storage: 'fa-database'
+                    };
+                    return icons[type] || 'fa-activity';
+                },
+
+                initCategoriesChart() {
+                    const ctx = document.getElementById('categoriesChart').getContext('2d');
+                    this.categoriesChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                data: [],
+                                backgroundColor: [
+                                    '#3B82F6', '#EF4444', '#10B981', '#F59E0B',
+                                    '#8B5CF6', '#F97316', '#06B6D4'
+                                ],
+                                borderWidth: 2,
+                                borderColor: '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: '#ffffff' }
+                                }
+                            }
+                        }
+                    });
+                },
+
+                updateCategoriesChart() {
+                    if (!this.categoriesChart || !this.stats?.categories) return;
+                    
+                    const categories = this.stats.categories;
+                    const labels = Object.keys(categories);
+                    const data = Object.values(categories);
+                    
+                    this.categoriesChart.data.labels = labels;
+                    this.categoriesChart.data.datasets[0].data = data;
+                    this.categoriesChart.update();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

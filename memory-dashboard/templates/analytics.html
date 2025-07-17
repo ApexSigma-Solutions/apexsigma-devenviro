@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Analytics - DevEnviro Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+        }
+        .gradient-bg { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen" x-data="analyticsApp()">
+    <!-- Navigation -->
+    <nav class="glass p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-chart-line text-white text-2xl"></i>
+                <h1 class="text-white text-xl font-bold">Memory Analytics</h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="/" class="text-white hover:text-blue-300 transition">Dashboard</a>
+                <a href="/search" class="text-white hover:text-blue-300 transition">Search</a>
+                <a href="/analytics" class="text-white hover:text-blue-300 transition font-bold">Analytics</a>
+                <a href="/extract" class="text-white hover:text-blue-300 transition">Extract</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 space-y-6">
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-database text-4xl mb-3 text-blue-400"></i>
+                <h3 class="text-lg font-semibold">Total Memories</h3>
+                <p class="text-3xl font-bold" x-text="stats?.total_memories || '0'"></p>
+                <p class="text-sm opacity-75">Stored in system</p>
+            </div>
+            <div class="glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-bolt text-4xl mb-3 text-yellow-400"></i>
+                <h3 class="text-lg font-semibold">Avg Response</h3>
+                <p class="text-3xl font-bold" x-text="(stats?.performance_stats?.average_response_time_ms || 0).toFixed(0) + 'ms'"></p>
+                <p class="text-sm opacity-75">System performance</p>
+            </div>
+            <div class="glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-percentage text-4xl mb-3 text-green-400"></i>
+                <h3 class="text-lg font-semibold">Success Rate</h3>
+                <p class="text-3xl font-bold" x-text="((1 - (stats?.performance_stats?.error_rate || 0)) * 100).toFixed(1) + '%'"></p>
+                <p class="text-sm opacity-75">Operation reliability</p>
+            </div>
+            <div class="glass rounded-lg p-6 text-white text-center">
+                <i class="fas fa-cogs text-4xl mb-3 text-purple-400"></i>
+                <h3 class="text-lg font-semibold">Total Operations</h3>
+                <p class="text-3xl font-bold" x-text="stats?.performance_stats?.total_operations || '0'"></p>
+                <p class="text-sm opacity-75">Since startup</p>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Category Distribution -->
+            <div class="glass rounded-lg p-6">
+                <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-chart-pie mr-3 text-blue-400"></i>
+                    Memory Distribution by Category
+                </h3>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="glass rounded-lg p-6">
+                <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-chart-bar mr-3 text-green-400"></i>
+                    Operation Breakdown
+                </h3>
+                <div class="chart-container">
+                    <canvas id="operationsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Category Analysis -->
+        <div class="glass rounded-lg p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-microscope mr-3 text-purple-400"></i>
+                Category Analysis
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <template x-for="(count, category) in stats?.categories || {}" :key="category">
+                    <div class="bg-white bg-opacity-10 rounded-lg p-4 text-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-semibold capitalize" x-text="category"></h4>
+                            <span class="text-2xl font-bold" x-text="count"></span>
+                        </div>
+                        <div class="w-full bg-gray-200 bg-opacity-20 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full transition-all duration-500" 
+                                 :style="`width: ${((count / (stats?.total_memories || 1)) * 100)}%`"></div>
+                        </div>
+                        <p class="text-sm opacity-75 mt-2" 
+                           x-text="`${((count / (stats?.total_memories || 1)) * 100).toFixed(1)}% of total`"></p>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- System Health Overview -->
+        <div class="glass rounded-lg p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-heartbeat mr-3 text-red-400"></i>
+                System Health Status
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-brain text-6xl" :class="getHealthColor(healthData?.memory_engine?.gemini)"></i>
+                    </div>
+                    <h4 class="font-semibold text-white">Gemini Engine</h4>
+                    <p class="text-sm" :class="getHealthColor(healthData?.memory_engine?.gemini)" 
+                       x-text="healthData?.memory_engine?.gemini || 'Unknown'"></p>
+                </div>
+                <div class="text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-database text-6xl" :class="getHealthColor(healthData?.memory_bridge?.qdrant)"></i>
+                    </div>
+                    <h4 class="font-semibold text-white">Vector Store</h4>
+                    <p class="text-sm" :class="getHealthColor(healthData?.memory_bridge?.qdrant)" 
+                       x-text="healthData?.memory_bridge?.qdrant || 'Unknown'"></p>
+                </div>
+                <div class="text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-network-wired text-6xl" :class="getHealthColor(healthData?.overall_status)"></i>
+                    </div>
+                    <h4 class="font-semibold text-white">Overall System</h4>
+                    <p class="text-sm" :class="getHealthColor(healthData?.overall_status)" 
+                       x-text="healthData?.overall_status || 'Unknown'"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Memories Table -->
+        <div class="glass rounded-lg p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-history mr-3 text-orange-400"></i>
+                Recent Memories
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-white">
+                    <thead>
+                        <tr class="border-b border-white border-opacity-20">
+                            <th class="text-left py-3">Category</th>
+                            <th class="text-left py-3">Content Preview</th>
+                            <th class="text-left py-3">Importance</th>
+                            <th class="text-left py-3">Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="memory in recentMemories.slice(0, 10)" :key="memory.id">
+                            <tr class="border-b border-white border-opacity-10 hover:bg-white hover:bg-opacity-5">
+                                <td class="py-3">
+                                    <span class="px-2 py-1 bg-blue-600 bg-opacity-80 rounded text-sm" 
+                                          x-text="memory.category"></span>
+                                </td>
+                                <td class="py-3">
+                                    <p class="text-sm" x-text="memory.text.substring(0, 80) + '...'"></p>
+                                </td>
+                                <td class="py-3">
+                                    <div class="flex items-center">
+                                        <span class="text-yellow-300 mr-1">★</span>
+                                        <span x-text="memory.importance"></span>
+                                    </div>
+                                </td>
+                                <td class="py-3 text-sm opacity-75" 
+                                    x-text="new Date(memory.timestamp).toLocaleString()"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyticsApp() {
+            return {
+                stats: null,
+                healthData: null,
+                recentMemories: [],
+                categoryChart: null,
+                operationsChart: null,
+
+                async init() {
+                    await this.loadData();
+                    this.initCharts();
+                    // Refresh every 30 seconds
+                    setInterval(() => this.loadData(), 30000);
+                },
+
+                async loadData() {
+                    await Promise.all([
+                        this.loadStats(),
+                        this.loadHealth(),
+                        this.loadRecentMemories()
+                    ]);
+                    this.updateCharts();
+                },
+
+                async loadStats() {
+                    try {
+                        const response = await fetch('/api/dashboard/stats');
+                        this.stats = await response.json();
+                    } catch (error) {
+                        console.error('Failed to load stats:', error);
+                    }
+                },
+
+                async loadHealth() {
+                    try {
+                        const response = await fetch('/api/system/health');
+                        this.healthData = await response.json();
+                    } catch (error) {
+                        console.error('Failed to load health:', error);
+                    }
+                },
+
+                async loadRecentMemories() {
+                    try {
+                        const response = await fetch('/api/dashboard/memories?limit=20');
+                        const data = await response.json();
+                        this.recentMemories = data.memories || [];
+                    } catch (error) {
+                        console.error('Failed to load recent memories:', error);
+                    }
+                },
+
+                initCharts() {
+                    // Category Distribution Chart
+                    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+                    this.categoryChart = new Chart(categoryCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                data: [],
+                                backgroundColor: [
+                                    '#3B82F6', '#EF4444', '#10B981', '#F59E0B',
+                                    '#8B5CF6', '#F97316', '#06B6D4'
+                                ],
+                                borderWidth: 2,
+                                borderColor: '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: '#ffffff' }
+                                }
+                            }
+                        }
+                    });
+
+                    // Operations Chart
+                    const operationsCtx = document.getElementById('operationsChart').getContext('2d');
+                    this.operationsChart = new Chart(operationsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Searches', 'Extractions', 'Stores'],
+                            datasets: [{
+                                label: 'Operations',
+                                data: [0, 0, 0],
+                                backgroundColor: ['#10B981', '#3B82F6', '#F59E0B'],
+                                borderColor: ['#059669', '#2563EB', '#D97706'],
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: { color: '#ffffff' }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { color: '#ffffff' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                },
+                                x: {
+                                    ticks: { color: '#ffffff' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                }
+                            }
+                        }
+                    });
+                },
+
+                updateCharts() {
+                    if (!this.stats) return;
+
+                    // Update category chart
+                    if (this.categoryChart && this.stats.categories) {
+                        const categories = this.stats.categories;
+                        this.categoryChart.data.labels = Object.keys(categories);
+                        this.categoryChart.data.datasets[0].data = Object.values(categories);
+                        this.categoryChart.update();
+                    }
+
+                    // Update operations chart
+                    if (this.operationsChart && this.stats.performance_stats) {
+                        const perf = this.stats.performance_stats;
+                        this.operationsChart.data.datasets[0].data = [
+                            perf.searches || 0,
+                            perf.extractions || 0,
+                            perf.stores || 0
+                        ];
+                        this.operationsChart.update();
+                    }
+                },
+
+                getHealthColor(status) {
+                    if (status === 'healthy') return 'text-green-400';
+                    if (status === 'degraded') return 'text-yellow-400';
+                    return 'text-red-400';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

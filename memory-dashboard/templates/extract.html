@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Extraction - DevEnviro Dashboard</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+        }
+        .gradient-bg { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+        .memory-card {
+            transition: all 0.3s ease;
+        }
+        .memory-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen" x-data="extractApp()">
+    <!-- Navigation -->
+    <nav class="glass p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-brain text-white text-2xl"></i>
+                <h1 class="text-white text-xl font-bold">Memory Extraction</h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="/" class="text-white hover:text-blue-300 transition">Dashboard</a>
+                <a href="/search" class="text-white hover:text-blue-300 transition">Search</a>
+                <a href="/analytics" class="text-white hover:text-blue-300 transition">Analytics</a>
+                <a href="/extract" class="text-white hover:text-blue-300 transition font-bold">Extract</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6">
+        <!-- Extraction Interface -->
+        <div class="glass rounded-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-magic mr-3 text-purple-300"></i>
+                Intelligent Memory Extraction
+            </h2>
+
+            <form @submit.prevent="extractMemories()" class="space-y-6">
+                <!-- Content Input -->
+                <div>
+                    <label class="block text-white text-sm font-semibold mb-2">Content to Extract Memories From</label>
+                    <textarea 
+                        x-model="extractionContent"
+                        placeholder="Paste your content here... (meeting notes, documentation, code, decisions, etc.)"
+                        rows="12"
+                        class="w-full p-4 rounded-lg bg-white bg-opacity-20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 resize-y"
+                        required
+                    ></textarea>
+                    <p class="text-gray-300 text-sm mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Gemini 2.5 Flash will intelligently identify and categorize key memories from your content
+                    </p>
+                </div>
+
+                <!-- Context Metadata -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Content Type</label>
+                        <select 
+                            x-model="contextType"
+                            class="w-full p-3 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        >
+                            <option value="">Auto-detect</option>
+                            <option value="meeting_notes">Meeting Notes</option>
+                            <option value="technical_documentation">Technical Documentation</option>
+                            <option value="code_review">Code Review</option>
+                            <option value="decision_record">Decision Record</option>
+                            <option value="project_update">Project Update</option>
+                            <option value="learning_notes">Learning Notes</option>
+                            <option value="requirements">Requirements</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Project/Context</label>
+                        <input 
+                            type="text" 
+                            x-model="projectContext"
+                            placeholder="e.g., ApexSigma DevEnviro, Client Project..."
+                            class="w-full p-3 rounded-lg bg-white bg-opacity-20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        >
+                    </div>
+                </div>
+
+                <!-- Additional Context -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Source</label>
+                        <input 
+                            type="text" 
+                            x-model="source"
+                            placeholder="Meeting, Document, Email..."
+                            class="w-full p-3 rounded-lg bg-white bg-opacity-20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Participants/Authors</label>
+                        <input 
+                            type="text" 
+                            x-model="participants"
+                            placeholder="Team members, stakeholders..."
+                            class="w-full p-3 rounded-lg bg-white bg-opacity-20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Priority Level</label>
+                        <select 
+                            x-model="priorityLevel"
+                            class="w-full p-3 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        >
+                            <option value="normal">Normal</option>
+                            <option value="high">High Priority</option>
+                            <option value="critical">Critical</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex space-x-4">
+                    <button 
+                        type="submit"
+                        class="flex-1 bg-purple-600 hover:bg-purple-700 p-4 rounded-lg font-semibold text-white transition flex items-center justify-center"
+                        :disabled="isExtracting"
+                    >
+                        <i class="fas fa-brain mr-2"></i>
+                        <span x-show="!isExtracting">Extract & Analyze Memories</span>
+                        <span x-show="isExtracting">Processing with Gemini...</span>
+                    </button>
+                    <button 
+                        type="button"
+                        @click="loadSampleContent()"
+                        class="bg-blue-600 hover:bg-blue-700 p-4 rounded-lg font-semibold text-white transition"
+                    >
+                        <i class="fas fa-file-alt mr-2"></i>
+                        Load Sample
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Extraction Results -->
+        <div x-show="extractionResults" class="glass rounded-lg p-6 mb-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-lightbulb mr-3 text-yellow-300"></i>
+                    Extracted Memories
+                </h3>
+                <div class="text-white text-sm" x-show="extractionResults">
+                    <span x-text="extractedMemories.length"></span> memories extracted in 
+                    <span x-text="extractionTime"></span>ms
+                </div>
+            </div>
+
+            <!-- Memory Cards -->
+            <div x-show="extractedMemories.length > 0" class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                <template x-for="(memory, index) in extractedMemories" :key="index">
+                    <div class="memory-card bg-white bg-opacity-10 rounded-lg p-5 text-white border border-white border-opacity-20">
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="px-3 py-1 bg-blue-600 bg-opacity-80 rounded-full text-sm font-semibold" 
+                                      x-text="memory.category"></span>
+                                <div class="flex items-center text-yellow-300">
+                                    <span class="mr-1">★</span>
+                                    <span x-text="memory.importance"></span>
+                                </div>
+                            </div>
+                            <button 
+                                @click="storeMemory(memory, index)"
+                                class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm transition"
+                                :disabled="memory.stored"
+                            >
+                                <i class="fas" :class="memory.stored ? 'fa-check' : 'fa-save'"></i>
+                                <span x-text="memory.stored ? 'Stored' : 'Store'"></span>
+                            </button>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="mb-4">
+                            <p class="text-sm leading-relaxed" x-text="memory.memory_text"></p>
+                        </div>
+
+                        <!-- Tags -->
+                        <div x-show="memory.tags && memory.tags.length > 0" class="mb-3">
+                            <div class="flex flex-wrap gap-1">
+                                <template x-for="tag in memory.tags">
+                                    <span class="px-2 py-1 bg-purple-600 bg-opacity-60 rounded text-xs" x-text="tag"></span>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Relationships -->
+                        <div x-show="memory.relationships && memory.relationships.length > 0" class="mb-3">
+                            <p class="text-xs text-gray-300 mb-1">Related to:</p>
+                            <div class="flex flex-wrap gap-1">
+                                <template x-for="rel in memory.relationships">
+                                    <span class="px-2 py-1 bg-gray-600 bg-opacity-60 rounded text-xs" x-text="rel"></span>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Decay Info -->
+                        <div class="text-xs text-gray-300 flex justify-between">
+                            <span>Relevance: <span x-text="memory.decay_hours"></span> hours</span>
+                            <span>Category: <span x-text="memory.category"></span></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Bulk Actions -->
+            <div x-show="extractedMemories.length > 0" class="flex space-x-4">
+                <button 
+                    @click="storeAllMemories()"
+                    class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold text-white transition flex items-center"
+                    :disabled="allMemoriesStored"
+                >
+                    <i class="fas fa-save mr-2"></i>
+                    <span x-text="allMemoriesStored ? 'All Stored' : 'Store All Memories'"></span>
+                </button>
+                <button 
+                    @click="exportMemories()"
+                    class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold text-white transition flex items-center"
+                >
+                    <i class="fas fa-download mr-2"></i>
+                    Export as JSON
+                </button>
+            </div>
+        </div>
+
+        <!-- Extraction Tips -->
+        <div x-show="!extractionResults" class="glass rounded-lg p-6">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                <i class="fas fa-graduation-cap mr-3 text-blue-300"></i>
+                Memory Extraction Tips
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+                <div>
+                    <h4 class="font-semibold mb-3 text-green-300">Best Content Types</h4>
+                    <ul class="text-sm space-y-2 opacity-90">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                            <span><strong>Meeting Notes:</strong> Decisions, action items, discussions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                            <span><strong>Technical Docs:</strong> Architecture decisions, implementation details</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                            <span><strong>Code Reviews:</strong> Patterns, best practices, improvements</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                            <span><strong>Project Updates:</strong> Progress, blockers, milestones</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3 text-purple-300">Memory Categories</h4>
+                    <ul class="text-sm space-y-2 opacity-90">
+                        <li><strong>Factual:</strong> Concrete facts and data</li>
+                        <li><strong>Procedural:</strong> How-to instructions and processes</li>
+                        <li><strong>Episodic:</strong> Events and experiences</li>
+                        <li><strong>Semantic:</strong> Concepts and knowledge</li>
+                        <li><strong>Organizational:</strong> Company patterns and standards</li>
+                        <li><strong>Architectural:</strong> Technical decisions and design</li>
+                        <li><strong>Temporal:</strong> Time-sensitive information</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function extractApp() {
+            return {
+                extractionContent: '',
+                contextType: '',
+                projectContext: '',
+                source: '',
+                participants: '',
+                priorityLevel: 'normal',
+                isExtracting: false,
+                extractionResults: null,
+                extractedMemories: [],
+                extractionTime: 0,
+
+                get allMemoriesStored() {
+                    return this.extractedMemories.length > 0 && 
+                           this.extractedMemories.every(m => m.stored);
+                },
+
+                async extractMemories() {
+                    this.isExtracting = true;
+                    const startTime = Date.now();
+
+                    try {
+                        const context = {
+                            content_type: this.contextType,
+                            project: this.projectContext,
+                            source: this.source,
+                            participants: this.participants.split(',').map(p => p.trim()).filter(p => p),
+                            priority: this.priorityLevel
+                        };
+
+                        const response = await fetch('/api/memory/extract', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                content: this.extractionContent,
+                                context: context
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        this.extractionResults = data;
+                        this.extractedMemories = (data.extraction?.memories || []).map(m => ({
+                            ...m,
+                            stored: false
+                        }));
+                        this.extractionTime = Date.now() - startTime;
+
+                    } catch (error) {
+                        console.error('Extraction failed:', error);
+                        alert('Memory extraction failed: ' + error.message);
+                    } finally {
+                        this.isExtracting = false;
+                    }
+                },
+
+                async storeMemory(memory, index) {
+                    try {
+                        const response = await fetch('/api/memory/store', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                content: memory.memory_text,
+                                category: memory.category,
+                                metadata: {
+                                    importance: memory.importance,
+                                    tags: memory.tags,
+                                    relationships: memory.relationships,
+                                    decay_hours: memory.decay_hours,
+                                    source: 'extraction',
+                                    project: this.projectContext
+                                }
+                            })
+                        });
+
+                        if (response.ok) {
+                            this.extractedMemories[index].stored = true;
+                        } else {
+                            throw new Error('Failed to store memory');
+                        }
+
+                    } catch (error) {
+                        console.error('Store failed:', error);
+                        alert('Failed to store memory: ' + error.message);
+                    }
+                },
+
+                async storeAllMemories() {
+                    for (let i = 0; i < this.extractedMemories.length; i++) {
+                        if (!this.extractedMemories[i].stored) {
+                            await this.storeMemory(this.extractedMemories[i], i);
+                        }
+                    }
+                },
+
+                exportMemories() {
+                    const dataStr = JSON.stringify(this.extractedMemories, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const exportFileDefaultName = `extracted-memories-${new Date().toISOString().split('T')[0]}.json`;
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                },
+
+                loadSampleContent() {
+                    this.extractionContent = `Team Meeting - July 17, 2025 - ApexSigma DevEnviro Project
+
+ATTENDEES: Development Team, Claude Code Assistant
+
+DECISIONS MADE:
+1. Replace Mem0 with native Gemini 2.5 Flash memory engine
+   - Reasoning: Better cost control, superior intelligence, full control over operations
+   - Implementation: Custom GeminiMemoryEngine class with Qdrant vector storage
+   - Performance targets: <200ms response time, 95%+ success rate
+
+2. Build memory analytics dashboard for users
+   - Framework: Modern web interface with FastAPI backend
+   - Features: Real-time search, memory visualization, system health monitoring
+   - UI: Glass morphism design with responsive layout
+
+TECHNICAL SPECIFICATIONS:
+- Gemini 2.5 Flash for memory extraction and categorization
+- 7 memory categories: factual, procedural, episodic, semantic, organizational, architectural, temporal
+- Qdrant vector database for semantic search
+- Hierarchical context loading system
+- Cross-project learning capabilities
+
+NEXT STEPS:
+1. Complete dashboard implementation with search interface
+2. Add memory extraction tools for content analysis
+3. Implement MCP server for agent coordination
+4. Performance benchmarking and optimization
+
+PERFORMANCE RESULTS:
+- Memory extraction: 5.6s average
+- Storage operations: 27ms average  
+- Search with re-ranking: 8s average
+- Zero errors in initial testing
+
+ORGANIZATIONAL IMPACT:
+This breakthrough establishes ApexSigma as a leader in cognitive collaboration technology.
+The system provides persistent organizational memory that grows with each project interaction.`;
+                    
+                    this.contextType = 'meeting_notes';
+                    this.projectContext = 'ApexSigma DevEnviro';
+                    this.source = 'Team Meeting';
+                    this.participants = 'Development Team, Claude Code';
+                    this.priorityLevel = 'high';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

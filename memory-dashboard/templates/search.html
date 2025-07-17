@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Search - DevEnviro Dashboard</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+        }
+        .gradient-bg { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+        .memory-result {
+            transition: all 0.3s ease;
+        }
+        .memory-result:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen" x-data="searchApp()">
+    <!-- Navigation -->
+    <nav class="glass p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-search text-white text-2xl"></i>
+                <h1 class="text-white text-xl font-bold">Memory Search</h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="/" class="text-white hover:text-blue-300 transition">Dashboard</a>
+                <a href="/search" class="text-white hover:text-blue-300 transition font-bold">Search</a>
+                <a href="/analytics" class="text-white hover:text-blue-300 transition">Analytics</a>
+                <a href="/extract" class="text-white hover:text-blue-300 transition">Extract</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6">
+        <!-- Search Interface -->
+        <div class="glass rounded-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-brain mr-3 text-blue-300"></i>
+                Intelligent Memory Search
+            </h2>
+
+            <form @submit.prevent="performSearch()" class="space-y-4">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="lg:col-span-2">
+                        <label class="block text-white text-sm font-semibold mb-2">Search Query</label>
+                        <input 
+                            type="text" 
+                            x-model="searchQuery"
+                            placeholder="Search memories using natural language..."
+                            class="w-full p-4 rounded-lg bg-white bg-opacity-20 placeholder-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Category Filter</label>
+                        <select 
+                            x-model="categoryFilter"
+                            class="w-full p-4 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                            <option value="">All Categories</option>
+                            <option value="factual">Factual</option>
+                            <option value="procedural">Procedural</option>
+                            <option value="episodic">Episodic</option>
+                            <option value="semantic">Semantic</option>
+                            <option value="organizational">Organizational</option>
+                            <option value="architectural">Architectural</option>
+                            <option value="temporal">Temporal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Results Limit</label>
+                        <select 
+                            x-model="searchLimit"
+                            class="w-full p-3 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                            <option value="10">10 Results</option>
+                            <option value="25">25 Results</option>
+                            <option value="50">50 Results</option>
+                            <option value="100">100 Results</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-white text-sm font-semibold mb-2">Importance Threshold</label>
+                        <select 
+                            x-model="importanceThreshold"
+                            class="w-full p-3 rounded-lg bg-white bg-opacity-20 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                            <option value="1">All (1+)</option>
+                            <option value="3">Important (3+)</option>
+                            <option value="5">High (5+)</option>
+                            <option value="7">Critical (7+)</option>
+                            <option value="9">Essential (9+)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button 
+                            type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-lg font-semibold text-white transition flex items-center justify-center"
+                            :disabled="isSearching"
+                        >
+                            <i class="fas fa-search mr-2"></i>
+                            <span x-show="!isSearching">Search Memories</span>
+                            <span x-show="isSearching">Searching...</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search Results -->
+        <div x-show="searchResults.length > 0 || hasSearched" class="glass rounded-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-list mr-3 text-green-300"></i>
+                    Search Results
+                </h3>
+                <div class="text-white text-sm" x-show="hasSearched">
+                    <span x-text="searchResults.length"></span> results found in 
+                    <span x-text="searchTime"></span>ms
+                </div>
+            </div>
+
+            <!-- No Results -->
+            <div x-show="hasSearched && searchResults.length === 0" class="text-center py-12 text-white">
+                <i class="fas fa-search text-6xl mb-4 text-gray-400"></i>
+                <h4 class="text-xl font-semibold mb-2">No memories found</h4>
+                <p class="text-gray-300">Try adjusting your search query or filters</p>
+            </div>
+
+            <!-- Results Grid -->
+            <div x-show="searchResults.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <template x-for="(result, index) in searchResults" :key="index">
+                    <div class="memory-result bg-white bg-opacity-10 rounded-lg p-4 text-white border border-white border-opacity-20">
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="px-3 py-1 bg-blue-600 bg-opacity-80 rounded-full text-sm font-semibold" 
+                                  x-text="result.category"></span>
+                            <div class="text-right text-sm">
+                                <div class="flex items-center">
+                                    <span class="text-yellow-300">★</span>
+                                    <span x-text="result.importance"></span>
+                                </div>
+                                <div class="text-green-300 font-bold" x-text="(result.score * 100).toFixed(1) + '%'"></div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="mb-3">
+                            <p class="text-sm leading-relaxed" x-text="result.text"></p>
+                        </div>
+
+                        <!-- Tags -->
+                        <div x-show="result.tags && result.tags.length > 0" class="mb-3">
+                            <div class="flex flex-wrap gap-1">
+                                <template x-for="tag in result.tags.slice(0, 3)">
+                                    <span class="px-2 py-1 bg-purple-600 bg-opacity-60 rounded text-xs" x-text="tag"></span>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="flex justify-between items-center text-xs text-gray-300">
+                            <span x-text="new Date(result.timestamp).toLocaleDateString()"></span>
+                            <span x-text="result.id.substring(0, 8) + '...'"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Search Tips -->
+        <div x-show="!hasSearched" class="glass rounded-lg p-6 mt-6">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                <i class="fas fa-lightbulb mr-3 text-yellow-300"></i>
+                Search Tips
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+                <div>
+                    <h4 class="font-semibold mb-2 text-blue-300">Natural Language Queries</h4>
+                    <ul class="text-sm space-y-1 opacity-90">
+                        <li>• "How to implement Gemini memory engine"</li>
+                        <li>• "FastAPI integration patterns"</li>
+                        <li>• "Security requirements for ApexSigma"</li>
+                        <li>• "Docker deployment configurations"</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2 text-green-300">Filter Options</h4>
+                    <ul class="text-sm space-y-1 opacity-90">
+                        <li>• <strong>Category:</strong> Filter by memory type</li>
+                        <li>• <strong>Importance:</strong> Focus on critical memories</li>
+                        <li>• <strong>Limit:</strong> Control result quantity</li>
+                        <li>• <strong>Threshold:</strong> Minimum relevance score</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchApp() {
+            return {
+                searchQuery: '',
+                categoryFilter: '',
+                searchLimit: 10,
+                importanceThreshold: 1,
+                searchResults: [],
+                isSearching: false,
+                hasSearched: false,
+                searchTime: 0,
+
+                async performSearch() {
+                    this.isSearching = true;
+                    const startTime = Date.now();
+
+                    try {
+                        const response = await fetch('/api/memory/search', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                query: this.searchQuery,
+                                limit: parseInt(this.searchLimit),
+                                category_filter: this.categoryFilter || null,
+                                importance_threshold: parseInt(this.importanceThreshold)
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        this.searchResults = data.results || [];
+                        this.searchTime = Date.now() - startTime;
+                        this.hasSearched = true;
+
+                    } catch (error) {
+                        console.error('Search failed:', error);
+                        alert('Search failed: ' + error.message);
+                        this.searchResults = [];
+                    } finally {
+                        this.isSearching = false;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
