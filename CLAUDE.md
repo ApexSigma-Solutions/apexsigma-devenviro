@@ -33,6 +33,66 @@ Transform AI agents from stateless tools into persistent, organizationally-aware
 - **Scalability**: 16+ memories stored, 69+ operations completed, 0% error rate
 
 ## DevEnviro Usage
+
+### Enhanced Startup & Session Management
+
+#### Session Signoff (Close to Open Protocol)
+```bash
+# End session and capture state for next startup
+python session_signoff.py      # Interactive session closing with state capture
+./signoff.sh                   # Linux/WSL signoff launcher
+signoff.bat                    # Windows signoff launcher
+```
+
+#### Standalone DevEnviro Startup
+```bash
+# Quick startup with session restoration
+python devenviro_startup.py    # Interactive startup with session context
+./startup.sh                   # Linux/WSL launcher
+startup.bat                    # Windows launcher
+```
+
+#### Integrated DevEnviro + Claude Code Launcher
+```bash
+# Full integrated launch (DevEnviro + Claude Code)
+python launch_claude.py        # Python launcher with full options
+./launch_claude.sh             # Linux/WSL integrated launcher  
+launch_claude.bat              # Windows integrated launcher
+
+# Launch options
+python launch_claude.py --devenviro-only     # DevEnviro startup only
+python launch_claude.py --claude-only        # Claude Code only
+python launch_claude.py --skip-interactive   # Non-interactive mode
+python launch_claude.py --project-path /path # Specific project
+
+# Show help
+python launch_claude.py --help
+./launch_claude.sh --help
+launch_claude.bat --help
+```
+
+#### Integrated DevEnviro + Gemini CLI Launcher
+```bash
+# Full integrated launch (DevEnviro + Gemini CLI)
+python launch_gemini.py        # Python launcher with full options
+./launch_gemini.sh             # Linux/WSL integrated launcher  
+launch_gemini.bat              # Windows integrated launcher
+
+# Launch options
+python launch_gemini.py --devenviro-only     # DevEnviro startup only
+python launch_gemini.py --gemini-only        # Gemini CLI only
+python launch_gemini.py --skip-interactive   # Non-interactive mode
+python launch_gemini.py --gemini-mode chat   # Start in chat mode
+python launch_gemini.py --gemini-mode code   # Start in code mode
+python launch_gemini.py --project-path /path # Specific project
+
+# Show help
+python launch_gemini.py --help
+./launch_gemini.sh --help
+launch_gemini.bat --help
+```
+
+### Core DevEnviro Commands
 ```bash
 # Memory Operations
 devenviro health     # Check system health
@@ -48,6 +108,28 @@ devenviro min        # Minimal initialization
 devenviro full       # Full system initialization
 devenviro install    # Install system-wide
 ```
+
+## Extended Knowledge Repository
+**Primary Location**: `G:\My Drive\ApexSigma-Solutions\Projects\ApexSigma DevEnviro`
+**Secondary Location**: `C:\Users\steyn\Projects\ApexSigma DevEnviro`
+
+### Available Resources
+#### Google Drive Repository
+- **Gemini Code Assist Project Scaffolding** - Standard project templates and architectural patterns
+- **Mem0 System Analysis** - Memory system features and capabilities  
+- **Prompt Refinement Strategies** - AI development optimization techniques
+- **Knowledge Graph Extraction** - System prompts for structured data extraction
+- **Core System Prompts** - Foundational AI agent instructions
+
+#### Local Project Repository
+- **Context and Relevant Knowledge** - Mem0 architecture, vector embeddings, knowledge extraction
+- **Daily Setup Guides** - Step-by-step implementation guides and workspace configurations
+- **Project Documentation** - Roadmaps, protocols, GitHub descriptions, enhanced dashboards
+- **Project Planning** - Implementation plans, strategic assessments, roadmap updates
+- **Project Tools & Assets** - Agent configurations, integration guides, strategic documentation
+- **UI Assets** - Logos, icons, and visual branding elements
+
+These repositories contain comprehensive organizational knowledge, project templates, implementation guides, and strategic documentation that supplements the local DevEnviro workspace.
 
 ## Memory Management Protocol
 - **Project-specific memories** are stored in `.devenviro/memory/`

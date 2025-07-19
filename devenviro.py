@@ -35,7 +35,9 @@ from gemini_memory_engine import (
     GeminiMemoryEngine,
     extract_and_store_memory,
     search_organizational_memory,
-    get_gemini_memory_engine
+    get_gemini_memory_engine,
+    capture_session_episodic_memory,
+    restore_session_continuity_brief
 )
 
 class DevEnviroManager:
@@ -146,7 +148,16 @@ async def main():
                 print(f"  {component}: {status}")
             
             print(f"\n[SUCCESS] DevEnviro ready in {manager.mode} mode")
-            print("[COMMANDS] Available commands:")
+            
+            # Show recent session continuity
+            try:
+                continuity = await restore_session_continuity_brief()
+                if "No recent session context" not in continuity:
+                    print(f"\n[CONTINUITY] {continuity}")
+            except Exception as e:
+                print(f"[INFO] Session continuity unavailable: {e}")
+            
+            print("\n[COMMANDS] Available commands:")
             print("  devenviro health     # Check system health")
             print("  devenviro search     # Search project memory")
             print("  devenviro extract    # Extract and store memories")
@@ -154,6 +165,8 @@ async def main():
             print("  devenviro global     # Initialize global workspace")
             print("  devenviro project    # Initialize project workspace")
             print("  devenviro full       # Full system initialization")
+            print("  devenviro session    # Capture current session for continuity")
+            print("  devenviro dashboard  # Start memory analytics dashboard")
             
         except Exception as e:
             print(f"[ERROR] Memory system initialization failed: {e}")
@@ -205,6 +218,10 @@ async def main():
             await full_init()
         elif command == "install":
             await install_system()
+        elif command == "session":
+            await capture_session()
+        elif command == "dashboard":
+            await start_dashboard()
         else:
             print(f"Unknown command: {command}")
             sys.exit(1)
@@ -522,6 +539,7 @@ async def full_init():
     print("[INFO] Dashboard URL: http://127.0.0.1:8090")
     print("[INFO] Memory search interface available")
     print("[INFO] Analytics and monitoring active")
+    print("[INFO] Use 'devenviro dashboard' to start the web interface")
     
     # Test full system
     await test_system()
@@ -572,6 +590,66 @@ async def install_system():
     
     print("[OK] DevEnviro system installation complete")
     print("[SUCCESS] Use 'devenviro full' to initialize complete system")
+
+async def capture_session():
+    """Capture current session for continuity"""
+    if len(sys.argv) < 3:
+        print("Usage: devenviro session <session_summary>")
+        print("Example: devenviro session 'Fixed dashboard responsiveness and updated README'")
+        return
+    
+    session_summary = " ".join(sys.argv[2:])
+    
+    print("Capturing session episode for continuity...")
+    
+    try:
+        result = await capture_session_episodic_memory(session_summary)
+        
+        if result["extraction"]["success"]:
+            stored_count = len(result["stored_memories"])
+            print(f"[OK] Session captured with {stored_count} episodic memories")
+            
+            # Show what was captured
+            for i, memory in enumerate(result["extraction"]["extraction"]["memories"]):
+                print(f"  {i+1}. [{memory['category']}] {memory['memory_text'][:80]}...")
+            
+            print(f"[SUCCESS] Session continuity established for future reference")
+        else:
+            print("[ERROR] Failed to capture session memories")
+            
+    except Exception as e:
+        print(f"[ERROR] Session capture failed: {e}")
+
+async def start_dashboard():
+    """Start the memory analytics dashboard"""
+    print("Starting DevEnviro Memory Analytics Dashboard...")
+    
+    try:
+        # Import dashboard server
+        sys.path.insert(0, str(Path(__file__).parent / "devenviro"))
+        from dashboard_server import start_dashboard_server
+        
+        # Check if memory engine is working
+        engine = await get_gemini_memory_engine()
+        health = await engine.health_check()
+        
+        if health["gemini"] == "healthy":
+            print("[OK] Memory engine ready")
+        else:
+            print("[WARN] Memory engine may have issues")
+        
+        print("[INFO] Starting dashboard server...")
+        print("[INFO] Dashboard will be available at: http://127.0.0.1:8090")
+        print("[INFO] Press Ctrl+C to stop the server")
+        
+        # Start the server (this will block)
+        start_dashboard_server()
+        
+    except KeyboardInterrupt:
+        print("\n[INFO] Dashboard server stopped")
+    except Exception as e:
+        print(f"[ERROR] Dashboard startup failed: {e}")
+        print("[TIP] Make sure all dependencies are installed: pip install -e .")
 
 def detect_project_type(project_path: Path) -> str:
     """Detect the type of project based on files present"""

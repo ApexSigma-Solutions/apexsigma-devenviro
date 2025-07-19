@@ -715,6 +715,95 @@ async def search_organizational_memory(query: str, limit: int = 10) -> List[Dict
     engine = await get_gemini_memory_engine()
     return await engine.search_memory(query, limit=limit)
 
+# Session Continuity via Enhanced Episodic Memory
+async def capture_session_episodic_memory(session_summary: str) -> Dict[str, Any]:
+    """Capture session as episodic memory with chronological context"""
+    timestamp = datetime.now()
+    session_id = f"session-{timestamp.strftime('%Y%m%d-%H%M%S')}"
+    
+    # Create episodic memory extraction focusing on continuity
+    episodic_content = f"""SESSION EPISODE - {timestamp.strftime('%Y-%m-%d %H:%M:%S')}
+
+{session_summary}
+
+This session episode should be remembered for future continuity, including:
+- Key decisions and their context
+- Technical work completed
+- Problems solved and approaches used
+- Important discoveries or insights
+- Next steps and open tasks
+- User working patterns and preferences
+"""
+    
+    context = {
+        "episode_type": "work_session",
+        "session_id": session_id,
+        "chronological_timestamp": timestamp.isoformat(),
+        "continuity_purpose": "session_flow"
+    }
+    
+    return await extract_and_store_memory(episodic_content, context)
+
+async def get_chronological_session_context(hours_back: int = 72) -> List[Dict[str, Any]]:
+    """Get recent episodic memories in chronological order for context restoration"""
+    engine = await get_gemini_memory_engine()
+    
+    # Search for recent episodic memories (sessions + other episodes)
+    recent_episodes = await engine.search_memory(
+        query="session episode work decisions context continuity",
+        limit=20,
+        category_filter="episodic",
+        importance_threshold=5
+    )
+    
+    # Filter by timestamp and sort chronologically
+    cutoff_time = datetime.now() - timedelta(hours=hours_back)
+    
+    chronological_context = []
+    for episode in recent_episodes:
+        timestamp_str = episode.get("metadata", {}).get("chronological_timestamp") or episode.get("timestamp", "")
+        
+        if timestamp_str:
+            try:
+                episode_time = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
+                episode_time = episode_time.replace(tzinfo=None)  # Remove timezone for comparison
+                
+                if episode_time >= cutoff_time:
+                    chronological_context.append({
+                        "timestamp": episode_time,
+                        "memory": episode,
+                        "hours_ago": (datetime.now() - episode_time).total_seconds() / 3600
+                    })
+            except Exception:
+                continue
+    
+    # Sort by timestamp (most recent first)
+    chronological_context.sort(key=lambda x: x["timestamp"], reverse=True)
+    
+    return chronological_context
+
+async def restore_session_continuity_brief() -> str:
+    """Generate brief continuity context for session initialization"""
+    context = await get_chronological_session_context(hours_back=72)
+    
+    if not context:
+        return "No recent session context available for continuity."
+    
+    brief = ["=== RECENT SESSION CONTINUITY ===\n"]
+    
+    for i, item in enumerate(context[:3]):  # Last 3 episodes
+        hours_ago = item["hours_ago"]
+        memory = item["memory"]
+        
+        time_desc = f"{int(hours_ago)}h ago" if hours_ago < 24 else f"{int(hours_ago/24)}d ago"
+        brief.append(f"[{time_desc}] {memory.get('text', '')[:120]}...")
+        
+        if i < 2:  # Add separator except for last item
+            brief.append("")
+    
+    brief.append(f"\n[INFO] {len(context)} episodes available for context")
+    return "\n".join(brief)
+
 if __name__ == "__main__":
     # Test the Gemini memory engine
     async def test_gemini_memory_engine():
