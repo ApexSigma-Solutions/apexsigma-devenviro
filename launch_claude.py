@@ -81,13 +81,25 @@ Examples:
                 # For now, we'll run it normally but could add a --non-interactive flag
                 print("[INFO] Running DevEnviro in non-interactive mode")
                 
-            result = subprocess.run(
-                [sys.executable, str(self.startup_script)],
-                cwd=self.current_directory,
-                input="\n7\n" if skip_interactive else None,  # Auto-select exit option
-                text=True,
-                capture_output=False
-            )
+            if skip_interactive:
+                # Use environment variable to signal non-interactive mode
+                env = os.environ.copy()
+                env['DEVENVIRO_NON_INTERACTIVE'] = '1'
+                env['DEVENVIRO_AUTO_EXIT'] = '7'
+                result = subprocess.run(
+                    [sys.executable, str(self.startup_script)],
+                    cwd=self.current_directory,
+                    text=True,
+                    env=env,
+                    capture_output=False
+                )
+            else:
+                result = subprocess.run(
+                    [sys.executable, str(self.startup_script)],
+                    cwd=self.current_directory,
+                    text=True,
+                    capture_output=False
+                )
             
             if result.returncode == 0:
                 print("[SUCCESS] DevEnviro startup completed")
@@ -140,9 +152,9 @@ Examples:
             
             # Fallback to VS Code if Claude Code not found
             try:
-                cmd[0] = "code"
+                fallback_cmd = ["code"] + cmd[1:]
                 subprocess.Popen(
-                    cmd,
+                    fallback_cmd,
                     cwd=target_path,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
@@ -185,7 +197,7 @@ Examples:
         # Step 2: Launch Claude Code (unless devenviro-only)
         if not args.devenviro_only:
             claude_success = self.launch_claude_code(
-                self.current_directory if not args.project_path else None,
+                self.current_directory,
                 args.claude_args
             )
             if not claude_success:

@@ -88,13 +88,25 @@ Examples:
             if skip_interactive:
                 print("[INFO] Running DevEnviro in non-interactive mode")
                 
-            result = subprocess.run(
-                [sys.executable, str(self.startup_script)],
-                cwd=self.current_directory,
-                input="\n7\n" if skip_interactive else None,  # Auto-select exit option
-                text=True,
-                capture_output=False
-            )
+            if skip_interactive:
+                # Use environment variable to signal non-interactive mode
+                env = os.environ.copy()
+                env['DEVENVIRO_NON_INTERACTIVE'] = '1'
+                env['DEVENVIRO_AUTO_EXIT'] = '7'
+                result = subprocess.run(
+                    [sys.executable, str(self.startup_script)],
+                    cwd=self.current_directory,
+                    text=True,
+                    env=env,
+                    capture_output=False
+                )
+            else:
+                result = subprocess.run(
+                    [sys.executable, str(self.startup_script)],
+                    cwd=self.current_directory,
+                    text=True,
+                    capture_output=False
+                )
             
             if result.returncode == 0:
                 print("[SUCCESS] DevEnviro startup completed")
@@ -156,9 +168,8 @@ Examples:
         elif mode == "analyze":
             cmd.extend(["analyze", "--path", str(target_path)])
         
-        # Add project context if available
-        if target_path != Path.cwd():
-            cmd.extend(["--context", str(target_path)])
+        # Always add project context
+        cmd.extend(["--context", str(target_path)])
         
         # Add any additional arguments
         if gemini_args:
