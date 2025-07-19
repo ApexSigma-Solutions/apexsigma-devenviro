@@ -5,17 +5,17 @@ Quick project status check
 import subprocess
 import os
 from pathlib import Path
+from devenviro.terminal_output import print_section_header, print_success, print_error, print_warning, safe_print
 
 
 def show_project_status():
     """Show current project status"""
-    print("📊 ApexSigma DevEnviro Project Status")
-    print("=" * 50)
+    print_section_header("[STATS] ApexSigma DevEnviro Project Status")
     print()
 
     # Project location
     project_path = Path.home() / "apexsigma-project"
-    print(f"📁 Project Location: {project_path}")
+    safe_print(f"[FOLDER] Project Location: {project_path}")
     print()
 
     # Git status
@@ -23,23 +23,23 @@ def show_project_status():
         os.chdir(project_path)
         result = subprocess.run(["git", "log", "--oneline", "-5"], capture_output=True, text=True)
         if result.returncode == 0:
-            print("📜 Recent Git History:")
+            safe_print("[GIT] Recent Git History:")
             for line in result.stdout.strip().split("\n"):
                 print(f"   {line}")
         print()
     except:
-        print("❌ Git not available\n")
+        print_error("Git not available\n")
 
     # Virtual environment reminder
     if "VIRTUAL_ENV" in os.environ:
-        print("✅ Virtual environment is active")
+        print_success("Virtual environment is active")
     else:
-        print("⚠️  Remember to activate virtual environment:")
+        print_warning("Remember to activate virtual environment:")
         print("   source venv/bin/activate")
     print()
 
     # Quick commands reminder
-    print("🚀 Quick Commands:")
+    safe_print("[LAUNCH] Quick Commands:")
     print("   cd ~/apexsigma-project")
     print("   source venv/bin/activate")
     print("   python code/test_wsl2_setup.py")

@@ -42,3 +42,13 @@ repos:
       - id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
         exclude: package.lock.json
+
+  - repo: local
+    hooks:
+      - id: no-unicode-terminal-output
+        name: No Unicode in Terminal Output
+        entry: python
+        args: [.devenviro/hooks/check_unicode.py]
+        language: system
+        files: \.py$
+        exclude: ^(devenviro/terminal_output\.py|\.devenviro/hooks/check_unicode\.py|tests/.*|docs/.*)$
