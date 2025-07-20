@@ -73,8 +73,22 @@ class SecurityManager:
             "checksum_algorithm": "sha256",
             "critical_file_monitoring": True,
             "cloud_backup_enabled": False,
+            "cloud_backup_path": "G:\\ApexSigmaSolutions\\Backups\\DevEnviro",
+            "cloud_backup_providers": {
+                "development": {
+                    "type": "local_drive",
+                    "path": "G:\\ApexSigmaSolutions\\Backups\\DevEnviro",
+                    "enabled": True
+                },
+                "production": {
+                    "type": "flexible",
+                    "providers": ["aws_s3", "azure_blob", "gcp_storage"],
+                    "enabled": False
+                }
+            },
             "encryption_enabled": False,
             "last_backup": None,
+            "last_cloud_backup": None,
             "last_integrity_check": None
         }
         
@@ -254,6 +268,41 @@ class SecurityManager:
         
         return results
     
+    def _should_exclude_from_backup(self, path: Path) -> bool:
+        """Check if file/folder should be excluded from backup"""
+        exclude_patterns = [
+            '__pycache__',
+            '.pyc',
+            'node_modules',
+            '.git',
+            '.venv',
+            'venv',
+            '.env',
+            'env',
+            '.DS_Store',
+            'Thumbs.db',
+            '*.tmp',
+            '*.temp',
+            '*.log',
+            '.pytest_cache',
+            '.coverage'
+        ]
+        
+        path_str = str(path).lower()
+        return any(pattern.lower() in path_str for pattern in exclude_patterns)
+    
+    def _copy_with_exclusions(self, src: Path, dst: Path):
+        """Copy directory while excluding problematic files"""
+        def ignore_function(dir_path, contents):
+            ignored = []
+            for item in contents:
+                item_path = Path(dir_path) / item
+                if self._should_exclude_from_backup(item_path):
+                    ignored.append(item)
+            return ignored
+        
+        shutil.copytree(src, dst, ignore=ignore_function)
+
     def create_versioned_backup(self) -> str:
         """Create versioned backup of all critical data"""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -267,17 +316,23 @@ class SecurityManager:
             memory_src = self.devenviro_root / 'memory'
             if memory_src.exists():
                 memory_dst = backup_path / 'memory'
-                shutil.copytree(memory_src, memory_dst)
+                self._copy_with_exclusions(memory_src, memory_dst)
             
             # Backup chat history
             chat_src = self.devenviro_root / 'chat_history'
             if chat_src.exists():
                 chat_dst = backup_path / 'chat_history'
-                shutil.copytree(chat_src, chat_dst)
+                self._copy_with_exclusions(chat_src, chat_dst)
             
-            # Backup security data
+            # Backup security data (exclude logs)
             security_dst = backup_path / 'security'
-            shutil.copytree(self.security_dir, security_dst)
+            security_dst.mkdir()
+            for item in self.security_dir.iterdir():
+                if not self._should_exclude_from_backup(item) and item.name not in ['audit.log', 'integrity.log']:
+                    if item.is_file():
+                        shutil.copy2(item, security_dst)
+                    else:
+                        self._copy_with_exclusions(item, security_dst / item.name)
             
             # Backup critical project files
             project_backup = backup_path / 'project'
@@ -290,7 +345,7 @@ class SecurityManager:
                     if file_path.is_file():
                         shutil.copy2(file_path, project_backup)
                     else:
-                        shutil.copytree(file_path, project_backup / file_path.name)
+                        self._copy_with_exclusions(file_path, project_backup / file_path.name)
             
             # Create backup manifest
             manifest = {
@@ -345,8 +400,11 @@ class SecurityManager:
             # Schedule integrity checks
             schedule.every(self.config["integrity_check_interval_minutes"]).minutes.do(self.verify_integrity)
             
-            # Schedule automatic backups
-            schedule.every(self.config["auto_backup_interval_minutes"]).minutes.do(self.create_versioned_backup)
+            # Schedule automatic backups (with cloud sync if enabled)
+            if self.config.get("cloud_backup_enabled", False):
+                schedule.every(self.config["auto_backup_interval_minutes"]).minutes.do(self.create_cloud_backup)
+            else:
+                schedule.every(self.config["auto_backup_interval_minutes"]).minutes.do(self.create_versioned_backup)
             
             while True:
                 schedule.run_pending()
@@ -416,6 +474,129 @@ class SecurityManager:
             print_error(f"Emergency restore failed: {e}")
             self._log_audit("RESTORE_FAILED", str(e))
             return False
+    
+    def sync_to_cloud(self, backup_path: str) -> bool:
+        """Sync backup to cloud storage (G: drive for development)"""
+        if not self.config.get("cloud_backup_enabled", False):
+            return True  # Skip if cloud backup disabled
+        
+        try:
+            backup_path_obj = Path(backup_path)
+            if not backup_path_obj.exists():
+                print_error(f"Backup path does not exist: {backup_path}")
+                return False
+            
+            cloud_config = self.config.get("cloud_backup_providers", {}).get("development", {})
+            if not cloud_config.get("enabled", False):
+                print_info("Development cloud backup disabled")
+                return True
+            
+            cloud_base_path = Path(cloud_config.get("path", "G:\\ApexSigmaSolutions\\Backups\\DevEnviro"))
+            
+            # Ensure cloud backup directory exists
+            try:
+                cloud_base_path.mkdir(parents=True, exist_ok=True)
+            except Exception as e:
+                print_error(f"Failed to create cloud backup directory: {e}")
+                return False
+            
+            # Create cloud backup with same name
+            cloud_backup_path = cloud_base_path / backup_path_obj.name
+            
+            print_info(f"Syncing backup to cloud: {cloud_backup_path}")
+            
+            # Copy backup to cloud location
+            if cloud_backup_path.exists():
+                shutil.rmtree(cloud_backup_path)
+            
+            shutil.copytree(backup_path_obj, cloud_backup_path)
+            
+            # Verify cloud backup
+            cloud_size = sum(f.stat().st_size for f in cloud_backup_path.rglob('*') if f.is_file())
+            local_size = sum(f.stat().st_size for f in backup_path_obj.rglob('*') if f.is_file())
+            
+            if cloud_size != local_size:
+                print_error(f"Cloud backup size mismatch: local={local_size}, cloud={cloud_size}")
+                return False
+            
+            # Update config with cloud backup timestamp
+            self.config["last_cloud_backup"] = datetime.now().isoformat()
+            self._save_security_config()
+            
+            # Clean old cloud backups
+            self._cleanup_old_cloud_backups(cloud_base_path)
+            
+            self._log_audit("CLOUD_BACKUP_SUCCESS", f"Synced to cloud: {cloud_backup_path}")
+            print_success(f"Cloud backup completed: {cloud_backup_path}")
+            
+            return True
+            
+        except Exception as e:
+            print_error(f"Cloud backup failed: {e}")
+            self._log_audit("CLOUD_BACKUP_FAILED", str(e))
+            return False
+    
+    def _cleanup_old_cloud_backups(self, cloud_base_path: Path):
+        """Remove old cloud backups beyond max_backups limit"""
+        try:
+            cloud_backup_dirs = [d for d in cloud_base_path.iterdir() 
+                               if d.is_dir() and d.name.startswith('devenviro_backup_')]
+            
+            if len(cloud_backup_dirs) > self.config["max_backups"]:
+                # Sort by creation time, keep newest
+                cloud_backup_dirs.sort(key=lambda x: x.stat().st_ctime, reverse=True)
+                old_cloud_backups = cloud_backup_dirs[self.config["max_backups"]:]
+                
+                for old_backup in old_cloud_backups:
+                    try:
+                        shutil.rmtree(old_backup)
+                        self._log_audit("CLOUD_BACKUP_CLEANUP", f"Removed old cloud backup: {old_backup.name}")
+                    except Exception as e:
+                        print_error(f"Failed to remove old cloud backup {old_backup}: {e}")
+        except Exception as e:
+            print_error(f"Cloud backup cleanup failed: {e}")
+    
+    def create_cloud_backup(self) -> str:
+        """Create backup and sync to cloud in one operation"""
+        # Create local backup first
+        local_backup_path = self.create_versioned_backup()
+        
+        if local_backup_path:
+            # Sync to cloud
+            cloud_success = self.sync_to_cloud(local_backup_path)
+            if cloud_success:
+                print_success("Complete backup (local + cloud) created successfully")
+            else:
+                print_warning("Local backup created, but cloud sync failed")
+        
+        return local_backup_path
+    
+    def get_cloud_backup_status(self) -> Dict[str, Any]:
+        """Get cloud backup status and information"""
+        status = {
+            "cloud_backup_enabled": self.config.get("cloud_backup_enabled", False),
+            "last_cloud_backup": self.config.get("last_cloud_backup"),
+            "cloud_provider": "development_local_drive",
+            "cloud_backup_path": None,
+            "cloud_backups_count": 0,
+            "cloud_backup_accessible": False
+        }
+        
+        cloud_config = self.config.get("cloud_backup_providers", {}).get("development", {})
+        if cloud_config.get("enabled", False):
+            cloud_path = Path(cloud_config.get("path", ""))
+            status["cloud_backup_path"] = str(cloud_path)
+            
+            try:
+                if cloud_path.exists():
+                    status["cloud_backup_accessible"] = True
+                    cloud_backups = [d for d in cloud_path.iterdir() 
+                                   if d.is_dir() and d.name.startswith('devenviro_backup_')]
+                    status["cloud_backups_count"] = len(cloud_backups)
+            except Exception:
+                status["cloud_backup_accessible"] = False
+        
+        return status
 
 
 def initialize_security() -> SecurityManager:
