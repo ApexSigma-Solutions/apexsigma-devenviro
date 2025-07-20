@@ -91,5 +91,75 @@
       "auto_categorized": true
     },
     "hash": "7768bcaf3d2c88b8b150908c800a937b"
+  },
+  {
+    "id": "4e7e0497-d2b8-4a68-a1d8-2c5488ea0b5f",
+    "content": "Test memory for persistence verification at 1753009963.781062",
+    "category": "factual",
+    "importance": 0.8,
+    "timestamp": "2025-07-20T13:12:43.781117",
+    "metadata": {
+      "test": true,
+      "verification": "persistence_test"
+    },
+    "hash": "53bb5cf991e7b7f9a13fa1a5248eea8f"
+  },
+  {
+    "id": "21602e04-cf28-4078-b19d-56b7290ed3a6",
+    "content": "Cross-session test memory 1753009963.8001006",
+    "category": "episodic",
+    "importance": 0.9,
+    "timestamp": "2025-07-20T13:12:43.800126",
+    "metadata": {
+      "session": "first",
+      "test_type": "cross_session"
+    },
+    "hash": "611f73e81232824e25ae09a8d4db511b"
+  },
+  {
+    "id": "69e15fb5-66c9-441d-9329-195360680824",
+    "content": "Concurrent test 1",
+    "category": "factual",
+    "importance": 0.5,
+    "timestamp": "2025-07-20T13:12:43.854445",
+    "metadata": {
+      "source": "engine1"
+    },
+    "hash": "e2c4f8e700ade27df752eba11ff1b7fc"
+  },
+  {
+    "id": "bcea8f05-01a3-4cd6-9f8b-81e99d0022cb",
+    "content": "Test memory for persistence verification at 1753009994.4896834",
+    "category": "factual",
+    "importance": 0.8,
+    "timestamp": "2025-07-20T13:13:14.489730",
+    "metadata": {
+      "test": true,
+      "verification": "persistence_test"
+    },
+    "hash": "5cce02a8f0bcd844cd7c2273719d0bcb"
+  },
+  {
+    "id": "45160621-883f-4bf1-bfeb-368d2ddb53ea",
+    "content": "Cross-session test memory 1753009994.509796",
+    "category": "episodic",
+    "importance": 0.9,
+    "timestamp": "2025-07-20T13:13:14.509840",
+    "metadata": {
+      "session": "first",
+      "test_type": "cross_session"
+    },
+    "hash": "161c90add1d793b3c8a4d8647f0200f2"
+  },
+  {
+    "id": "6ac100a1-7f51-4cef-8be5-26b051d48b36",
+    "content": "Concurrent test 1",
+    "category": "factual",
+    "importance": 0.5,
+    "timestamp": "2025-07-20T13:13:14.573260",
+    "metadata": {
+      "source": "engine1"
+    },
+    "hash": "e2c4f8e700ade27df752eba11ff1b7fc"
   }
 ]

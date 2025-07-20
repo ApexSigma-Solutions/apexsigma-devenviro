@@ -1,0 +1,38 @@
+{
+  "claude-code": {
+    "agent_id": "claude-code",
+    "agent_type": "claude-code",
+    "capabilities": [
+      "code_generation",
+      "file_editing",
+      "analysis",
+      "documentation"
+    ],
+    "status": "active",
+    "last_heartbeat": "2025-07-20T15:26:28.385075",
+    "process_id": null,
+    "version": "1.0.0",
+    "metadata": {
+      "startup_time": "2025-07-20T15:26:28.385082",
+      "devenviro_root": "C:\\Users\\steyn\\apexsigma-projects\\.devenviro"
+    }
+  },
+  "gemini-cli": {
+    "agent_id": "gemini-cli",
+    "agent_type": "gemini-cli",
+    "capabilities": [
+      "chat",
+      "code_assistance",
+      "analysis",
+      "debugging"
+    ],
+    "status": "active",
+    "last_heartbeat": "2025-07-20T15:26:28.375752",
+    "process_id": null,
+    "version": "1.0.0",
+    "metadata": {
+      "startup_time": "2025-07-20T15:26:28.375772",
+      "devenviro_root": "C:\\Users\\steyn\\apexsigma-projects\\.devenviro"
+    }
+  }
+}

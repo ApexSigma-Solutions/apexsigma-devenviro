@@ -28,6 +28,13 @@ try:
 except ImportError:
     QdrantClient = None
 
+# A2A Protocol imports
+try:
+    from .a2a_protocol import A2AProtocol, MessageType, MessagePriority, A2AMessage
+    A2A_AVAILABLE = True
+except ImportError:
+    A2A_AVAILABLE = False
+
 # Database operations
 try:
     import asyncpg
@@ -59,6 +66,7 @@ class GeminiMemoryEngine:
         self.gemini_client = None
         self.qdrant_client = None
         self.postgres_pool = None
+        self.a2a_protocol = None
         
         # Memory categories and importance thresholds
         self.memory_categories = {
@@ -68,7 +76,8 @@ class GeminiMemoryEngine:
             "semantic": "Concepts, relationships, and general knowledge",
             "organizational": "Company-specific patterns, standards, and decisions",
             "architectural": "System design, technical decisions, and patterns",
-            "temporal": "Time-sensitive information and deadlines"
+            "temporal": "Time-sensitive information and deadlines",
+            "inter_agent": "Agent-to-agent messages, requests, and coordination data"
         }
         
         # Performance tracking
@@ -129,6 +138,9 @@ class GeminiMemoryEngine:
             
             # Initialize PostgreSQL (optional)
             await self._initialize_postgres()
+            
+            # Initialize A2A Protocol for agent communication
+            await self._initialize_a2a()
             
             logger.info("Gemini Memory Engine initialization complete")
             return True
@@ -644,6 +656,172 @@ Example: 3,1,7,2,5"""
             status["qdrant"] = f"error: {str(e)}"
         
         return status
+    
+    async def _initialize_a2a(self):
+        """Initialize A2A Protocol for agent communication"""
+        if not A2A_AVAILABLE:
+            logger.warning("A2A Protocol not available - agent communication disabled")
+            return
+        
+        try:
+            self.a2a_protocol = A2AProtocol("gemini-memory", str(self.config_path.parent if self.config_path else Path.cwd()))
+            logger.info("A2A Protocol initialized for agent communication")
+        except Exception as e:
+            logger.warning(f"A2A Protocol initialization failed: {e}")
+            self.a2a_protocol = None
+    
+    async def send_agent_message(self, target_agent: str, content: Dict[str, Any], 
+                               msg_type: MessageType = MessageType.NOTIFICATION,
+                               priority: MessagePriority = MessagePriority.NORMAL) -> str:
+        """Send message to another agent via A2A protocol"""
+        if not self.a2a_protocol:
+            logger.warning("A2A Protocol not initialized - cannot send agent message")
+            return ""
+        
+        try:
+            message_id = await self.a2a_protocol.send_message(
+                target_agent, msg_type, content, priority
+            )
+            
+            # Store the message in memory for persistence
+            await self.store_memory({
+                "id": str(uuid.uuid4()),
+                "content": f"Sent A2A message to {target_agent}: {content.get('text', str(content))}",
+                "category": "inter_agent",
+                "importance": 0.7,
+                "tags": ["a2a", "outbound", target_agent],
+                "metadata": {
+                    "message_id": message_id,
+                    "target_agent": target_agent,
+                    "message_type": msg_type.value,
+                    "priority": priority.value
+                }
+            })
+            
+            return message_id
+            
+        except Exception as e:
+            logger.error(f"Failed to send agent message: {e}")
+            return ""
+    
+    async def get_agent_messages(self, unread_only: bool = True) -> List[A2AMessage]:
+        """Get messages for this agent from A2A protocol"""
+        if not self.a2a_protocol:
+            logger.warning("A2A Protocol not initialized - cannot get agent messages")
+            return []
+        
+        try:
+            messages = await self.a2a_protocol.get_messages(unread_only)
+            
+            # Store received messages in memory for persistence
+            for message in messages:
+                if not message.acknowledged:  # Only store new messages
+                    await self.store_memory({
+                        "id": str(uuid.uuid4()),
+                        "content": f"Received A2A message from {message.sender_agent}: {message.content.get('text', str(message.content))}",
+                        "category": "inter_agent",
+                        "importance": 0.8,
+                        "tags": ["a2a", "inbound", message.sender_agent],
+                        "metadata": {
+                            "message_id": message.id,
+                            "sender_agent": message.sender_agent,
+                            "message_type": message.message_type.value,
+                            "priority": message.priority.value,
+                            "timestamp": message.timestamp
+                        }
+                    })
+            
+            return messages
+            
+        except Exception as e:
+            logger.error(f"Failed to get agent messages: {e}")
+            return []
+    
+    async def acknowledge_agent_message(self, message_id: str):
+        """Acknowledge receipt of an agent message"""
+        if not self.a2a_protocol:
+            return
+        
+        try:
+            await self.a2a_protocol.acknowledge_message(message_id)
+        except Exception as e:
+            logger.error(f"Failed to acknowledge message {message_id}: {e}")
+    
+    async def respond_to_agent_message(self, original_message: A2AMessage, response_content: Dict[str, Any]):
+        """Send response to an agent message"""
+        if not self.a2a_protocol:
+            return
+        
+        try:
+            await self.a2a_protocol.respond_to_message(original_message, response_content)
+            
+            # Store the response in memory
+            await self.store_memory({
+                "id": str(uuid.uuid4()),
+                "content": f"Responded to A2A message from {original_message.sender_agent}: {response_content.get('text', str(response_content))}",
+                "category": "inter_agent", 
+                "importance": 0.7,
+                "tags": ["a2a", "response", original_message.sender_agent],
+                "metadata": {
+                    "original_message_id": original_message.id,
+                    "target_agent": original_message.sender_agent,
+                    "conversation_id": original_message.conversation_id
+                }
+            })
+            
+        except Exception as e:
+            logger.error(f"Failed to respond to agent message: {e}")
+    
+    async def broadcast_agent_status(self, status_info: Dict[str, Any]):
+        """Broadcast status update to all active agents"""
+        if not self.a2a_protocol:
+            return
+        
+        try:
+            active_agents = self.a2a_protocol.get_active_agents()
+            
+            for agent in active_agents:
+                await self.send_agent_message(
+                    agent.agent_id,
+                    {
+                        "status_update": status_info,
+                        "timestamp": datetime.now().isoformat(),
+                        "from": "gemini-memory"
+                    },
+                    MessageType.STATUS,
+                    MessagePriority.LOW
+                )
+                
+        except Exception as e:
+            logger.error(f"Failed to broadcast agent status: {e}")
+    
+    async def search_agent_communications(self, agent_id: str = None, 
+                                        message_type: str = None,
+                                        days_back: int = 7) -> List[Dict[str, Any]]:
+        """Search for agent communication history in memory"""
+        try:
+            # Build search query
+            search_terms = ["A2A", "agent message"]
+            if agent_id:
+                search_terms.append(agent_id)
+            if message_type:
+                search_terms.append(message_type)
+            
+            query = " ".join(search_terms)
+            
+            # Search with filters
+            cutoff_date = datetime.now() - timedelta(days=days_back)
+            filters = {
+                "category": "inter_agent",
+                "min_timestamp": cutoff_date.isoformat()
+            }
+            
+            results = await self.search_memories(query, filters=filters, limit=50)
+            return results
+            
+        except Exception as e:
+            logger.error(f"Failed to search agent communications: {e}")
+            return []
     
     def get_performance_stats(self) -> Dict[str, Any]:
         """Get performance statistics"""

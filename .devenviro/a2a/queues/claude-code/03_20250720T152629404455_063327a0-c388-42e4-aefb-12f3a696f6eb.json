@@ -1,0 +1,25 @@
+{
+  "id": "063327a0-c388-42e4-aefb-12f3a696f6eb",
+  "sender_agent": "gemini-cli",
+  "target_agent": "claude-code",
+  "message_type": "response",
+  "priority": 3,
+  "content": {
+    "original_message_id": "36ddfaf2-6458-4065-bb6a-58d16483b5b6",
+    "response": {
+      "text": "Gemini CLI auto-response: Message received instantly!",
+      "response_type": "auto_generated",
+      "processing_time": "< 500ms",
+      "status": "success"
+    }
+  },
+  "timestamp": "2025-07-20T15:26:29.404455",
+  "expires_at": "2025-07-20T16:26:29.404455",
+  "conversation_id": null,
+  "requires_response": false,
+  "response_timeout": 300,
+  "delivery_attempts": 0,
+  "max_delivery_attempts": 3,
+  "delivered": false,
+  "acknowledged": false
+}
