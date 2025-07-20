@@ -1,0 +1,196 @@
+meta:
+  name: "ai-assistance-guidelines"
+  version: "1.0.0"
+  category: "process"
+  level: "global"
+  description: "Guidelines for effective AI assistance in ApexSigma projects"
+  author: "ApexSigma Solutions"
+  created: "2025-07-19"
+  updated: "2025-07-19"
+  tags: ["ai", "claude", "gemini", "assistance", "prompting"]
+
+policy:
+  summary: "Standardized approaches for leveraging AI assistance across development workflows"
+  rationale: |
+    AI assistants like Claude and Gemini can significantly enhance development productivity
+    when used effectively. These guidelines ensure consistent, secure, and productive
+    AI assistance across all ApexSigma projects.
+  scope: "All AI-assisted development activities"
+  impact: "Improved development velocity and code quality through effective AI usage"
+
+prompting_best_practices:
+  specificity:
+    - "Be specific and clear in requests rather than vague"
+    - "Provide file context and paths when relevant"
+    - "Include relevant code snippets or error messages"
+    - "Specify the desired output format or structure"
+    
+  context_provision:
+    - "Mention relevant files, technologies, and frameworks in use"
+    - "Reference project architecture and conventions"
+    - "Include relevant documentation or specifications"
+    - "Provide error messages or logs when troubleshooting"
+    
+  iterative_refinement:
+    - "Use follow-up questions to refine responses"
+    - "Provide feedback on partial solutions"
+    - "Ask for alternatives or improvements"
+    - "Request explanations for complex solutions"
+
+code_assistance_rules:
+  - id: "verify-before-commit"
+    severity: "error"
+    message: "All AI-generated code must be reviewed and tested before commit"
+    description: "Never commit AI-generated code without human review"
+    
+  - id: "test-ai-suggestions"
+    severity: "error" 
+    message: "Test all AI-suggested changes in development environment"
+    description: "Validate AI suggestions work as expected"
+    
+  - id: "understand-before-use"
+    severity: "warning"
+    message: "Understand AI-generated code before incorporating it"
+    description: "Don't use code you don't understand"
+
+security_guidelines:
+  - "Never share sensitive information in AI prompts"
+  - "Avoid including API keys, passwords, or credentials"
+  - "Be cautious with proprietary business logic"
+  - "Review AI suggestions for security vulnerabilities"
+  - "Don't rely on AI for security-critical code validation"
+
+effective_prompting_patterns:
+  code_generation:
+    template: |
+      In [file_path], create a [component_type] that:
+      - [specific requirement 1]
+      - [specific requirement 2]
+      - Uses our existing [framework/library] patterns
+      - Follows our [coding standards/conventions]
+    example: |
+      In `src/components/ui/Button.tsx`, create a React component that:
+      - Accepts variant props (primary, secondary, destructive)
+      - Uses our Tailwind CSS design system
+      - Includes proper TypeScript typing
+      - Follows our component composition patterns
+
+  code_review:
+    template: |
+      Review the following [language] code for:
+      - [specific concern 1] (e.g., performance, security)
+      - [specific concern 2] (e.g., best practices, maintainability)
+      - Compliance with our [coding standards]
+    example: |
+      Review this Python function for:
+      - Error handling improvements
+      - Performance optimizations
+      - PEP 8 compliance
+      - Type hint completeness
+
+  debugging:
+    template: |
+      I'm experiencing [problem description] in [context].
+      Error: [error message]
+      Expected: [expected behavior]
+      Actual: [actual behavior]
+      Relevant code: [code snippet]
+    example: |
+      I'm experiencing a validation error in our FastAPI endpoint.
+      Error: ValidationError: field required
+      Expected: Successful user creation
+      Actual: 422 validation error
+      Relevant code: [Pydantic model definition]
+
+  architecture_guidance:
+    template: |
+      For [project/feature description], recommend:
+      - Architectural patterns
+      - Technology choices
+      - File organization
+      - Consider our existing tech stack: [technologies]
+    example: |
+      For a user authentication system, recommend:
+      - Security best practices
+      - Session management approach  
+      - Database schema design
+      - Consider our FastAPI + PostgreSQL stack
+
+ai_tool_specific_guidelines:
+  claude_code:
+    - "Use for complex code analysis and generation"
+    - "Leverage file system access for context-aware assistance"
+    - "Utilize memory capabilities for project continuity"
+    - "Good for architectural discussions and refactoring"
+    
+  gemini_cli:
+    - "Excellent for quick code snippets and explanations"
+    - "Use MCP servers for external tool integration"
+    - "Good for rapid prototyping and experimentation"
+    - "Effective for learning new technologies"
+
+quality_assurance:
+  verification_checklist:
+    - "Code compiles/runs without errors"
+    - "Tests pass (existing and new)"
+    - "Follows project coding standards"
+    - "Includes appropriate error handling"
+    - "Has necessary documentation/comments"
+    - "No security vulnerabilities introduced"
+    - "Performance impact is acceptable"
+
+collaboration_guidelines:
+  team_usage:
+    - "Share effective prompts and techniques with team"
+    - "Document AI-assisted solutions for future reference"
+    - "Establish team conventions for AI tool usage"
+    - "Regular review of AI assistance effectiveness"
+    
+  knowledge_sharing:
+    - "Contribute successful prompt patterns to team library"
+    - "Share discovered AI capabilities and limitations"
+    - "Document project-specific AI assistance strategies"
+    - "Mentor team members on effective AI usage"
+
+limitations_awareness:
+  what_ai_is_good_for:
+    - "Code generation and boilerplate reduction"
+    - "Code review and improvement suggestions"
+    - "Debugging assistance and error explanation"
+    - "Learning new technologies and patterns"
+    - "Documentation generation and improvement"
+    
+  what_ai_struggles_with:
+    - "Complex business logic without context"
+    - "Security-critical implementations"
+    - "Performance-sensitive optimizations"
+    - "Integration with proprietary systems"
+    - "Understanding implicit project requirements"
+
+enforcement:
+  pre_commit: false
+  ci_cd: false
+  real_time: false
+  ide_integration: true
+  
+  validation:
+    - "Code review includes AI usage assessment"
+    - "Pull requests document AI assistance used"
+    - "Security review for AI-generated code"
+
+integration:
+  startup_context: true
+  claude_instructions: true
+  vscode_settings: false
+  pre_commit_hooks: false
+
+training_resources:
+  internal_docs:
+    - "AI Prompting Best Practices Guide"
+    - "Project-Specific AI Assistance Examples"
+    - "Security Guidelines for AI Usage"
+    
+  external_resources:
+    - "Anthropic Claude Documentation"
+    - "Google Gemini API Documentation"
+    - "Prompt Engineering Courses"

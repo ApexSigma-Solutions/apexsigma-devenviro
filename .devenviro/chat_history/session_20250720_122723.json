@@ -1,0 +1,23 @@
+{
+  "session_id": "session_20250720_122723",
+  "start_time": "2025-07-20T12:27:23.357705",
+  "git_branch": "beta",
+  "working_directory": "C:\\Users\\steyn\\apexsigma-projects",
+  "conversations": [
+    {
+      "timestamp": "2025-07-20T12:27:23.385810",
+      "user_message": "good morning, im guessing you have amnesia again",
+      "assistant_response": "Good morning! You're right - I start fresh each session. Let me check what's been happening in the project...",
+      "context": {
+        "greeting": true,
+        "session_start": true
+      },
+      "exchange_id": 1
+    }
+  ],
+  "metadata": {
+    "total_exchanges": 1,
+    "last_updated": "2025-07-20T12:27:23.385817",
+    "session_status": "active"
+  }
+}

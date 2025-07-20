@@ -1,21 +1,89 @@
 """
-Windows-safe terminal output utilities for DevEnviro.
-
-This module provides unicode-safe output functions that work consistently
-across Windows Command Prompt, PowerShell, and WSL2 environments.
+Windows-safe terminal output functions
+Provides Unicode-safe printing for Windows Command Prompt and PowerShell
 """
-
 import sys
-from typing import Optional
+import os
 
 
-# Emoji to text mapping for Windows compatibility
-EMOJI_MAP = {
-    # Status indicators
+def safe_print(message, end='\n', flush=False):
+    """
+    Print message safely handling Windows terminal encoding issues
+    """
+    try:
+        # Try to print normally first
+        print(message, end=end, flush=flush)
+    except UnicodeEncodeError:
+        # Fallback to ASCII-safe output
+        safe_message = message.encode('ascii', 'replace').decode('ascii')
+        print(safe_message, end=end, flush=flush)
+
+
+def print_success(message):
+    """Print success message with safe formatting"""
+    safe_print(f"[SUCCESS] {message}")
+
+
+def print_error(message):
+    """Print error message with safe formatting"""
+    safe_print(f"[ERROR] {message}")
+
+
+def print_warning(message):
+    """Print warning message with safe formatting"""
+    safe_print(f"[WARNING] {message}")
+
+
+def print_info(message):
+    """Print info message with safe formatting"""
+    safe_print(f"[INFO] {message}")
+
+
+def print_api(message):
+    """Print API message with safe formatting"""
+    safe_print(f"[API] {message}")
+
+
+def print_ready(message):
+    """Print ready message with safe formatting"""
+    safe_print(f"[READY] {message}")
+
+
+def print_help(message):
+    """Print help message with safe formatting"""
+    safe_print(f"[HELP] {message}")
+
+
+def print_launch(message):
+    """Print launch message with safe formatting"""
+    safe_print(f"[LAUNCH] {message}")
+
+
+def print_stats(message):
+    """Print stats message with safe formatting"""
+    safe_print(f"[STATS] {message}")
+
+
+def print_loading(message):
+    """Print loading message with safe formatting"""
+    safe_print(f"[LOADING] {message}")
+
+
+def print_memory(message):
+    """Print memory message with safe formatting"""
+    safe_print(f"[MEMORY] {message}")
+
+
+def print_search(message):
+    """Print search message with safe formatting"""
+    safe_print(f"[SEARCH] {message}")
+
+
+# Unicode replacement mapping
+UNICODE_REPLACEMENTS = {
     "✅": "[SUCCESS]",
-    "❌": "[ERROR]",
-    "⚠️": "[WARNING]", 
-    "⚠": "[WARNING]",
+    "❌": "[ERROR]", 
+    "⚠️": "[WARNING]",
     "🔗": "[LINK]",
     "📡": "[API]",
     "🎉": "[READY]",
@@ -23,144 +91,36 @@ EMOJI_MAP = {
     "💡": "[INFO]",
     "🚀": "[LAUNCH]",
     "📊": "[STATS]",
+    "🔄": "[LOADING]",
+    "🧠": "[MEMORY]",
+    "📋": "[TASKS]",
+    "📂": "[FILES]",
     "🔍": "[SEARCH]",
-    "📁": "[FOLDER]",
-    "📄": "[FILE]",
-    "🖥️": "[SYSTEM]",
-    "🔒": "[SECURE]",
-    "🔑": "[KEY]",
-    "⏱️": "[TIME]",
-    "🌐": "[WEB]",
-    "💾": "[SAVE]",
-    "🔄": "[SYNC]",
-    "📦": "[PACKAGE]",
-    "🏗️": "[BUILD]",
-    "🧪": "[TEST]",
+    "⚙️": "[CONFIG]",
+    "🌟": "[HIGHLIGHT]",
+    "📝": "[NOTE]",
     "🎯": "[TARGET]",
-    "📈": "[METRICS]",
-    "🔧": "[CONFIG]",
-    "⭐": "[STAR]",
-    "🔥": "[HOT]",
-    "✨": "[NEW]",
-    "🐛": "[BUG]",
-    "🎨": "[STYLE]",
-    "📝": "[DOCS]",
-    "💸": "[COST]",
-    "🚨": "[ALERT]",
-    "🔔": "[NOTIFY]",
-    "📢": "[ANNOUNCE]"
+    "🔐": "[SECURE]",
+    "⏳": "[WAIT]",
+    "🔀": "[MERGE]",
+    "📈": "[TREND]",
+    "🛠️": "[TOOLS]",
+    "📦": "[PACKAGE]",
+    "🌐": "[NETWORK]",
+    "🔥": "[PRIORITY]",
+    "🚫": "[BLOCKED]",
+    "➡️": "[NEXT]",
+    "💻": "[CODE]",
+    "📱": "[MOBILE]",
+    "🖥️": "[DESKTOP]",
+    "☁️": "[CLOUD]",
+    "🔒": "[LOCKED]",
+    "🔓": "[UNLOCKED]"
 }
 
 
-def safe_print(message: str, prefix: Optional[str] = None, **kwargs) -> None:
-    """
-    Print message with unicode characters converted to Windows-safe text.
-    
-    Args:
-        message: The message to print
-        prefix: Optional prefix to add (will also be converted)
-        **kwargs: Additional arguments passed to print()
-    """
-    # Convert unicode characters to safe text
-    safe_message = _convert_unicode(message)
-    
-    if prefix:
-        safe_prefix = _convert_unicode(prefix)
-        safe_message = f"{safe_prefix} {safe_message}"
-    
-    print(safe_message, **kwargs)
-
-
-def _convert_unicode(text: str) -> str:
-    """Convert unicode characters to Windows-safe text equivalents."""
-    for emoji, replacement in EMOJI_MAP.items():
-        text = text.replace(emoji, replacement)
+def replace_unicode(text):
+    """Replace Unicode characters with Windows-safe equivalents"""
+    for unicode_char, replacement in UNICODE_REPLACEMENTS.items():
+        text = text.replace(unicode_char, replacement)
     return text
-
-
-def format_status(status: str, message: str) -> str:
-    """
-    Format a status message with consistent styling.
-    
-    Args:
-        status: Status type ('success', 'error', 'warning', 'info')
-        message: The message to format
-        
-    Returns:
-        Formatted message string
-    """
-    status_map = {
-        'success': '[SUCCESS]',
-        'error': '[ERROR]', 
-        'warning': '[WARNING]',
-        'info': '[INFO]',
-        'api': '[API]',
-        'link': '[LINK]',
-        'ready': '[READY]',
-        'help': '[HELP]',
-        'launch': '[LAUNCH]',
-        'stats': '[STATS]',
-        'search': '[SEARCH]'
-    }
-    
-    prefix = status_map.get(status.lower(), f'[{status.upper()}]')
-    return f"{prefix} {message}"
-
-
-def print_status(status: str, message: str, **kwargs) -> None:
-    """Print a formatted status message."""
-    formatted_message = format_status(status, message)
-    print(formatted_message, **kwargs)
-
-
-def print_success(message: str, **kwargs) -> None:
-    """Print a success message."""
-    print_status('success', message, **kwargs)
-
-
-def print_error(message: str, **kwargs) -> None:
-    """Print an error message."""
-    print_status('error', message, **kwargs)
-
-
-def print_warning(message: str, **kwargs) -> None:
-    """Print a warning message."""
-    print_status('warning', message, **kwargs)
-
-
-def print_info(message: str, **kwargs) -> None:
-    """Print an info message."""
-    print_status('info', message, **kwargs)
-
-
-# Convenience functions for common patterns
-def print_section_header(title: str) -> None:
-    """Print a section header with consistent formatting."""
-    separator = "=" * 50
-    safe_print(f"\n{title}")
-    safe_print(separator)
-
-
-def print_subsection(title: str) -> None:
-    """Print a subsection header."""
-    safe_print(f"\n{title}")
-    safe_print("-" * len(title))
-
-
-if __name__ == "__main__":
-    # Test the unicode conversion
-    test_messages = [
-        "✅ Success message",
-        "❌ Error occurred", 
-        "⚠️ Warning message",
-        "🔗 Testing connection",
-        "📡 API call in progress",
-        "🎉 Ready to go!",
-        "🔧 Need help with configuration"
-    ]
-    
-    print("Testing unicode conversion:")
-    for msg in test_messages:
-        safe_print(f"Original: {repr(msg)}")
-        safe_print(f"Converted: {_convert_unicode(msg)}")
-        safe_print("")

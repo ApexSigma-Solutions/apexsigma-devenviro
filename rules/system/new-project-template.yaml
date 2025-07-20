@@ -1,0 +1,266 @@
+meta:
+  name: "new-project-template"
+  version: "1.0.0"
+  category: "system"
+  level: "system"
+  description: "Template configuration for new project initialization"
+  author: "ApexSigma Solutions"
+  created: "2025-07-19"
+  updated: "2025-07-19"
+  tags: ["template", "initialization", "project-setup"]
+
+policy:
+  summary: "Standardized new project setup with rules system integration"
+  rationale: |
+    New projects should start with a consistent foundation that includes
+    the hierarchical rules system, proper tooling configuration, and
+    ApexSigma organizational standards.
+  scope: "All new ApexSigma projects"
+  impact: "Ensures consistent project quality from inception"
+
+project_initialization:
+  required_structure:
+    directories:
+      - "rules/"
+      - "rules/local/"
+      - "docs/"
+      - "tests/"
+      - ".devenviro/"
+      
+    files:
+      - "README.md"
+      - ".gitignore"
+      - ".pre-commit-config.yaml"
+      - "rules/README.md"
+      - "rules/project/project-specific-rules.yaml"
+
+rules_hierarchy_setup:
+  inheritance_chain:
+    - "system"    # Core ApexSigma rules (this repository)
+    - "global"    # Organization-wide standards
+    - "project"   # Project-specific requirements
+    - "local"     # Developer/workspace overrides
+    
+  auto_included_rules:
+    global_rules:
+      - "unicode-policy.yaml"
+      - "code-quality-standards.yaml"
+      - "ai-assistance-guidelines.yaml"
+      - "python-coding-standards.yaml"  # if Python project
+      
+    system_rules:
+      - "rule-template.yaml"
+      - "new-project-template.yaml"
+
+project_types:
+  python:
+    additional_files:
+      - "pyproject.toml"
+      - "requirements.txt"
+      - "pytest.ini"
+      - ".python-version"
+      
+    rules:
+      - "python-coding-standards.yaml"
+      - "python-testing-standards.yaml"
+      
+    tools:
+      - "black"
+      - "isort"
+      - "flake8"
+      - "mypy"
+      - "pytest"
+      
+  web_frontend:
+    additional_files:
+      - "package.json"
+      - "tsconfig.json"
+      - ".eslintrc.js"
+      - ".prettierrc"
+      
+    rules:
+      - "typescript-standards.yaml"
+      - "react-best-practices.yaml"
+      
+  api_backend:
+    additional_files:
+      - "docker-compose.yml"
+      - "Dockerfile"
+      - "openapi.yaml"
+      
+    rules:
+      - "api-design-standards.yaml"
+      - "security-standards.yaml"
+
+devenviro_integration:
+  initialization_mode: "new project"
+  
+  configuration:
+    memory_categories:
+      - "factual"
+      - "procedural" 
+      - "episodic"
+      - "semantic"
+      - "organizational"
+      - "architectural"
+      - "temporal"
+      
+    session_management:
+      enabled: true
+      signoff_required: true
+      context_restoration: true
+      
+    cross_project_learning:
+      enabled: true
+      organizational_memory: true
+      pattern_recognition: true
+
+git_configuration:
+  pre_commit_hooks:
+    repos:
+      - repo: "https://github.com/pre-commit/pre-commit-hooks"
+        rev: "v4.4.0"
+        hooks:
+          - id: "trailing-whitespace"
+          - id: "end-of-file-fixer"
+          - id: "check-yaml"
+          - id: "check-json"
+          
+      - repo: "local"
+        hooks:
+          - id: "rules-validation"
+            name: "Validate Rules Files"
+            entry: "python scripts/validate-rules.py"
+            language: "system"
+            files: "rules/.*\\.yaml$"
+
+ai_agent_setup:
+  claude_instructions:
+    file: "CLAUDE.md"
+    template: |
+      # Claude: {PROJECT_NAME} Agent
+
+      ## Project Context
+      {PROJECT_DESCRIPTION}
+
+      ## Technology Stack
+      {TECH_STACK}
+
+      ## Rules System Integration
+      - Hierarchical rules structure in `rules/`
+      - Global ApexSigma standards automatically inherited
+      - Project-specific rules in `rules/project/`
+      - Local overrides supported in `rules/local/`
+
+      ## Development Standards
+      - Follow ApexSigma coding standards
+      - Maintain DevEnviro cognitive architecture compatibility
+      - Support session continuity and cross-project learning
+      
+  gemini_instructions:
+    file: "GEMINI.md"
+    template: |
+      # Gemini: {PROJECT_NAME} Assistant
+
+      ## Project Overview
+      {PROJECT_DESCRIPTION}
+
+      ## Architecture
+      {PROJECT_ARCHITECTURE}
+
+      ## AI Assistance Guidelines
+      - Reference rules system for coding standards
+      - Verify information before implementation
+      - Consider cross-project learning opportunities
+      - Maintain organizational memory integration
+
+documentation_templates:
+  readme_template: |
+    # {PROJECT_NAME}
+
+    {PROJECT_DESCRIPTION}
+
+    ## Quick Start
+
+    {QUICK_START_INSTRUCTIONS}
+
+    ## Development
+
+    ### Prerequisites
+    {PREREQUISITES}
+
+    ### Setup
+    ```bash
+    {SETUP_COMMANDS}
+    ```
+
+    ### Rules System
+    This project uses the ApexSigma hierarchical rules system:
+    - Global rules: Inherited from organization standards
+    - Project rules: Located in `rules/project/`
+    - Local rules: Workspace-specific in `rules/local/`
+
+    See `rules/README.md` for complete rules documentation.
+
+    ## Architecture
+    {ARCHITECTURE_OVERVIEW}
+
+    ## Contributing
+    Please review the rules in `rules/` before contributing.
+    All code must pass pre-commit hooks and follow ApexSigma standards.
+
+quality_assurance:
+  initial_validation:
+    - "Rules files are valid YAML"
+    - "Required directories exist"
+    - "Git hooks are configured"
+    - "Documentation is complete"
+    - "DevEnviro integration works"
+    
+  testing_setup:
+    - "Basic test framework configured"
+    - "CI/CD pipeline template"
+    - "Code coverage reporting"
+    - "Quality gates defined"
+
+automation_scripts:
+  create_project:
+    script: "scripts/create-project.py"
+    parameters:
+      - "project_name"
+      - "project_type"
+      - "description"
+      - "tech_stack"
+      
+  validate_rules:
+    script: "scripts/validate-rules.py"
+    purpose: "Validate rules hierarchy and syntax"
+    
+  sync_global_rules:
+    script: "scripts/sync-global-rules.py"
+    purpose: "Update global rules from organization standards"
+
+enforcement:
+  pre_commit: true
+  ci_cd: true
+  real_time: false
+  ide_integration: true
+  
+  validation:
+    - "Project structure validation"
+    - "Rules hierarchy integrity check"
+    - "DevEnviro integration test"
+    - "Documentation completeness check"
+
+integration:
+  startup_context: true
+  claude_instructions: true
+  vscode_settings: true
+  pre_commit_hooks: true
+
+migration_support:
+  existing_projects:
+    - "Analysis of current project structure"
+    - "Gap analysis against new project template"
+    - "Migration script generation"
+    - "Gradual adoption support"
