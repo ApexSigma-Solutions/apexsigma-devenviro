@@ -1,0 +1,174 @@
+meta:
+  name: "python-coding-standards"
+  version: "1.0.0"
+  category: "code-quality"
+  level: "global"
+  description: "Python coding standards and style guidelines for ApexSigma projects"
+  author: "ApexSigma Solutions"
+  created: "2025-07-19"
+  updated: "2025-07-19"
+  tags: ["python", "formatting", "style", "pep8"]
+
+policy:
+  summary: "Consistent Python coding standards across all ApexSigma projects"
+  rationale: |
+    Consistent coding standards improve code readability, maintainability, and team collaboration.
+    These standards are based on PEP 8 with ApexSigma-specific enhancements.
+  scope: "All Python files in ApexSigma projects"
+  impact: "Ensures consistent code quality and reduces technical debt"
+
+rules:
+  - id: "python-indentation"
+    severity: "error"
+    message: "Use 4 spaces for indentation, not tabs"
+    description: "Python code must use 4 spaces for indentation"
+    pattern: '\t'
+    files: "**/*.py"
+    
+  - id: "python-line-length"
+    severity: "warning"
+    message: "Line length should not exceed 88 characters (Black default)"
+    description: "Keep lines under 88 characters for better readability"
+    pattern: '^.{89,}$'
+    files: "**/*.py"
+    
+  - id: "python-docstrings"
+    severity: "warning"
+    message: "Functions and classes should have docstrings"
+    description: "All public functions and classes require docstrings"
+    pattern: '^(def|class)\s+(?!_)[a-zA-Z_][a-zA-Z0-9_]*.*:\s*$'
+    files: "**/*.py"
+    
+  - id: "python-imports-order"
+    severity: "error"
+    message: "Imports must be ordered: stdlib, third-party, local"
+    description: "Import statements should follow PEP 8 ordering"
+    files: "**/*.py"
+
+formatting:
+  tool: "black"
+  config:
+    line_length: 88
+    target_versions: ["py38", "py39", "py310", "py311"]
+    include: '\.pyi?$'
+    extend_exclude: |
+      /(
+        # Virtual environments
+        \.venv
+        | venv
+        | env
+        # Build artifacts
+        | build
+        | dist
+        # Generated files
+        | migrations
+      )/
+      
+linting:
+  tools:
+    - name: "flake8"
+      config:
+        max_line_length: 88
+        ignore: ["E203", "W503", "E501"]
+        per_file_ignores:
+          "__init__.py": ["F401"]
+          "tests/*": ["F401", "F811"]
+          
+    - name: "mypy"
+      config:
+        python_version: "3.8"
+        warn_return_any: true
+        warn_unused_configs: true
+        disallow_untyped_defs: true
+        
+    - name: "isort"
+      config:
+        profile: "black"
+        multi_line_output: 3
+        line_length: 88
+
+naming_conventions:
+  variables: "snake_case"
+  functions: "snake_case"
+  classes: "PascalCase"
+  constants: "UPPER_SNAKE_CASE"
+  modules: "snake_case"
+  packages: "lowercase"
+
+code_style:
+  - "Use explicit variable names over short, ambiguous ones"
+  - "Prefer list comprehensions over map/filter for simple operations"
+  - "Use f-strings for string formatting (Python 3.6+)"
+  - "Use pathlib.Path for file system operations"
+  - "Avoid magic numbers - use named constants"
+  - "Use type hints for function parameters and return values"
+
+error_handling:
+  - "Use try-except blocks for error handling"
+  - "Be specific about exception types being caught"
+  - "Log errors appropriately with context"
+  - "Use custom exceptions for domain-specific errors"
+  - "Clean up resources with context managers or try/finally"
+
+testing:
+  framework: "pytest"
+  conventions:
+    - "Test files should be named test_*.py or *_test.py"
+    - "Test functions should start with test_"
+    - "Use descriptive test names that explain what is being tested"
+    - "Group related tests in classes when appropriate"
+    - "Use fixtures for test setup and teardown"
+    - "Mock external dependencies"
+    - "Aim for high test coverage (>80%)"
+
+documentation:
+  docstring_style: "google"
+  requirements:
+    - "All public modules, functions, classes, and methods must have docstrings"
+    - "Include parameter types and descriptions"
+    - "Include return value description"
+    - "Document raised exceptions"
+    - "Provide usage examples for complex functions"
+
+security:
+  - "Never hardcode secrets or credentials"
+  - "Use environment variables for configuration"
+  - "Validate and sanitize all inputs"
+  - "Use secure random number generation"
+  - "Follow principle of least privilege"
+
+performance:
+  - "Profile code before optimizing"
+  - "Use appropriate data structures for the task"
+  - "Cache expensive computations when appropriate"
+  - "Use generators for large data sets"
+  - "Avoid premature optimization"
+
+enforcement:
+  pre_commit: true
+  ci_cd: true
+  real_time: true
+  ide_integration: true
+  
+  hooks:
+    - "black --check"
+    - "isort --check-only"
+    - "flake8"
+    - "mypy"
+    
+  tools:
+    - name: "pre-commit"
+      description: "Git pre-commit hooks for code quality"
+      location: ".pre-commit-config.yaml"
+
+exceptions:
+  - "scripts/*.py"        # Utility scripts may have relaxed rules
+  - "migrations/*.py"     # Database migrations are auto-generated
+  - "conftest.py"         # Pytest configuration file
+  - "setup.py"           # Package setup file
+
+integration:
+  startup_context: true
+  claude_instructions: true
+  vscode_settings: true
+  pre_commit_hooks: true

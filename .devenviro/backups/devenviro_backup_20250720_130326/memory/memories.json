@@ -79,17 +79,5 @@
     "timestamp": "2025-07-20T12:55:16.063328",
     "metadata": {},
     "hash": "4a8c93fc54e7d6e663d71314963356e8"
-  },
-  {
-    "id": "08660eae-d82d-4069-9f72-89d3025958a3",
-    "content": "Memory database now fully secured with automated backups, integrity checking, and emergency recovery capabilities",
-    "category": "factual",
-    "importance": 0.5,
-    "timestamp": "2025-07-20T13:05:09.828027",
-    "metadata": {
-      "source": "cli",
-      "auto_categorized": true
-    },
-    "hash": "7768bcaf3d2c88b8b150908c800a937b"
   }
 ]

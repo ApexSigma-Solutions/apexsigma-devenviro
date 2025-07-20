@@ -1,0 +1,195 @@
+meta:
+  name: "code-quality-standards"
+  version: "1.0.0"
+  category: "code-quality"
+  level: "global"
+  description: "Universal code quality standards for ApexSigma projects"
+  author: "ApexSigma Solutions"
+  created: "2025-07-19"
+  updated: "2025-07-19"
+  tags: ["quality", "standards", "verification", "testing"]
+
+policy:
+  summary: "Maintain high code quality standards across all ApexSigma projects"
+  rationale: |
+    High-quality code reduces bugs, improves maintainability, enhances security,
+    and increases development velocity over time. These standards ensure consistent
+    quality across all projects and technologies.
+  scope: "All source code in ApexSigma projects"
+  impact: "Reduced technical debt and improved long-term project sustainability"
+
+rules:
+  - id: "verify-information"
+    severity: "error"
+    message: "Always verify information before implementation"
+    description: "Do not make assumptions or speculate without clear evidence"
+    
+  - id: "file-by-file-changes"
+    severity: "warning"
+    message: "Make changes file by file for easier review"
+    description: "Incremental changes reduce risk and improve review quality"
+    
+  - id: "preserve-existing-code"
+    severity: "error"
+    message: "Don't remove unrelated code or functionalities"
+    description: "Pay attention to preserving existing structures and functionality"
+    
+  - id: "no-magic-numbers"
+    severity: "warning"
+    message: "Replace hardcoded values with named constants"
+    description: "Improve code clarity and maintainability"
+    
+  - id: "explicit-variable-names"
+    severity: "warning"
+    message: "Use descriptive, explicit variable names"
+    description: "Prefer descriptive names over short, ambiguous ones"
+
+general_principles:
+  verification:
+    - "Always verify information before presenting or implementing"
+    - "Don't make assumptions or speculate without clear evidence"
+    - "Check context and existing implementations"
+    - "Validate changes against requirements"
+    
+  incremental_development:
+    - "Make changes file by file to enable better review"
+    - "Provide all edits in single chunks per file"
+    - "Avoid multi-step instructions for the same file"
+    - "Give reviewers chance to spot mistakes"
+    
+  code_preservation:
+    - "Don't remove unrelated code or functionalities"
+    - "Preserve existing structures and patterns"
+    - "Maintain backward compatibility where possible"
+    - "Document breaking changes clearly"
+
+coding_standards:
+  readability:
+    - "Use explicit, descriptive variable names"
+    - "Follow consistent coding style within projects"
+    - "Write self-documenting code where possible"
+    - "Add comments for complex business logic"
+    
+  maintainability:
+    - "Follow modular design principles"
+    - "Avoid code duplication (DRY principle)"
+    - "Keep functions and classes focused (single responsibility)"
+    - "Use appropriate design patterns"
+    
+  performance:
+    - "Consider performance implications of changes"
+    - "Profile before optimizing"
+    - "Use appropriate data structures and algorithms"
+    - "Avoid premature optimization"
+    
+  security:
+    - "Always consider security implications"
+    - "Validate and sanitize all inputs"
+    - "Follow principle of least privilege"
+    - "Never hardcode sensitive information"
+
+testing_requirements:
+  coverage:
+    - "Include appropriate unit tests for new code"
+    - "Maintain or improve existing test coverage"
+    - "Test edge cases and error conditions"
+    - "Use meaningful test names and descriptions"
+    
+  quality:
+    - "Tests should be fast and reliable"
+    - "Use mocks for external dependencies"
+    - "Follow arrange-act-assert pattern"
+    - "Keep tests simple and focused"
+
+error_handling:
+  robustness:
+    - "Implement robust error handling and logging"
+    - "Handle expected error conditions gracefully"
+    - "Provide meaningful error messages"
+    - "Log errors with sufficient context for debugging"
+    
+  validation:
+    - "Use assertions to validate assumptions"
+    - "Check preconditions and postconditions"
+    - "Validate inputs at system boundaries"
+    - "Handle edge cases appropriately"
+
+version_compatibility:
+  - "Ensure changes are compatible with project's specified versions"
+  - "Document version requirements for new dependencies"
+  - "Test against supported platform versions"
+  - "Provide migration guides for breaking changes"
+
+documentation_standards:
+  code_documentation:
+    - "Document public APIs comprehensively"
+    - "Include usage examples for complex functionality"
+    - "Explain non-obvious design decisions"
+    - "Keep documentation up-to-date with code changes"
+    
+  change_documentation:
+    - "Document the 'why' behind changes, not just 'what'"
+    - "Include rationale for architectural decisions"
+    - "Provide migration instructions for users"
+    - "Link to relevant specifications or requirements"
+
+review_guidelines:
+  what_to_check:
+    - "Functionality meets requirements"
+    - "Code follows project standards and conventions"
+    - "Security implications are considered"
+    - "Performance impact is acceptable"
+    - "Tests adequately cover new functionality"
+    - "Documentation is complete and accurate"
+    
+  review_process:
+    - "Review code for logic errors and edge cases"
+    - "Verify error handling is appropriate"
+    - "Check for potential security vulnerabilities"
+    - "Ensure code is maintainable and readable"
+    - "Validate test coverage and quality"
+
+anti_patterns:
+  avoid:
+    - "Making unnecessary updates when no changes needed"
+    - "Showing current implementation unless requested"
+    - "Inventing changes beyond what's explicitly requested"
+    - "Removing functionality without explicit requirement"
+    - "Using magic numbers or hardcoded values"
+    - "Ignoring existing code patterns and conventions"
+
+enforcement:
+  pre_commit: true
+  ci_cd: true
+  real_time: true
+  ide_integration: true
+  
+  tools:
+    - name: "code-review-checklist"
+      description: "Automated checks for common quality issues"
+      
+  validation:
+    - "Automated linting and formatting checks"
+    - "Required code review approval"
+    - "Automated test execution"
+    - "Security scanning for vulnerabilities"
+
+metrics:
+  quality_indicators:
+    - "Code coverage percentage"
+    - "Cyclomatic complexity scores"
+    - "Number of code smells detected"
+    - "Security vulnerability count"
+    - "Technical debt ratio"
+    
+  improvement_tracking:
+    - "Defect rates over time"
+    - "Code review feedback trends"
+    - "Time to resolve issues"
+    - "Developer satisfaction with code quality"
+
+integration:
+  startup_context: true
+  claude_instructions: true
+  vscode_settings: true
+  pre_commit_hooks: true

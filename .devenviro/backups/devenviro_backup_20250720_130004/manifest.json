@@ -1,0 +1,15 @@
+{
+  "backup_id": "devenviro_backup_20250720_130004",
+  "timestamp": "2025-07-20T13:00:04.552785",
+  "backup_path": "C:\\Users\\steyn\\apexsigma-projects\\.devenviro\\backups\\devenviro_backup_20250720_130004",
+  "files_backed_up": 65,
+  "integrity_checksums": {
+    "C:\\Users\\steyn\\apexsigma-projects\\.devenviro\\memory\\memories.json": "94649573c0b5ae303ae36cbdee7fe104da3e80a1e9a8f8aeb0af9ea2b3edbf9d",
+    "C:\\Users\\steyn\\apexsigma-projects\\.devenviro\\memory\\index.json": "26c5daf543d1e4f400211da54e288ffb4d5aa69166344babdecda91695a7cbda",
+    "C:\\Users\\steyn\\apexsigma-projects\\.devenviro\\chat_history": "3be5abddfe3ae71bfa78274156e43b6f62e24a0341bdde618c539ead6d9f8d22",
+    "C:\\Users\\steyn\\apexsigma-projects\\CLAUDE.md": "6ac78ed780bd8bb8bd58c1b4029ccace6e5fb468eba52d48a212535ca80379aa",
+    "C:\\Users\\steyn\\apexsigma-projects\\rules": "44c282d46e7b5574acdfd2bb4e9b84c6594a92dd4ffd8a2dd2fb1c4390a27709",
+    "C:\\Users\\steyn\\apexsigma-projects\\devenviro": "63fd65df0517cf1bca001875c723d8f3893b1def398f82f3f1418aaa4991f200"
+  },
+  "backup_size_bytes": 752925
+}

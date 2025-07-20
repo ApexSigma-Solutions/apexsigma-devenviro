@@ -1,0 +1,121 @@
+# Rule Template for ApexSigma DevEnviro Rules System
+# Copy this template to create new rules
+
+meta:
+  name: "rule-name"                    # Unique identifier (kebab-case)
+  version: "1.0.0"                    # Semantic version
+  category: ""                        # code-quality | security | process | business  
+  level: ""                          # system | global | project | local
+  description: ""                    # Brief description of the rule
+  author: ""                         # Rule author/team
+  created: ""                        # Creation date (YYYY-MM-DD)
+  updated: ""                        # Last update date (YYYY-MM-DD)
+  tags: []                           # Optional tags for categorization
+
+policy:
+  summary: ""                        # One-line policy statement
+  rationale: ""                      # Multi-line explanation of why this rule exists
+  scope: ""                          # What this rule applies to
+  impact: ""                         # Impact of violations
+
+rules:
+  - id: "unique-rule-id"
+    severity: ""                     # error | warning | info
+    message: ""                      # Error message shown to users
+    description: ""                  # Detailed description
+    pattern: ""                      # Regex pattern or glob pattern  
+    files: ""                        # File pattern this rule applies to
+    
+  # Add more rules as needed
+  - id: "another-rule-id"
+    severity: ""
+    message: ""
+    description: ""
+    pattern: ""
+    files: ""
+
+enforcement:
+  pre_commit: false                  # Run in pre-commit hooks
+  ci_cd: false                       # Run in CI/CD pipeline
+  real_time: false                   # Run during development
+  ide_integration: false             # Integrate with IDEs
+  
+  hooks: []                          # List of hook files
+  tools: []                          # List of enforcement tools
+  
+  # Tool configuration
+  tools:
+    - name: ""                       # Tool name
+      description: ""                # What the tool does
+      location: ""                   # File path to tool
+      config: {}                     # Tool-specific configuration
+
+exceptions:
+  # List file patterns that are exempt from this rule
+  - "docs/**/*"
+  - "tests/**/*"
+  - "examples/**/*"
+
+dependencies:
+  # Other rules this rule depends on
+  requires: []
+  conflicts: []
+  suggests: []
+
+configuration:
+  # Rule-specific configuration options
+  parameters: {}
+  defaults: {}
+  overrides: {}
+
+validation:
+  command: ""                        # Command to validate compliance
+  success_criteria: ""               # What constitutes success
+  test_files: []                     # Files to test the rule against
+
+reporting:
+  violations_found: 0
+  files_scanned: 0
+  last_audit: ""
+  
+compliance:
+  level: ""                          # Compliance percentage or status
+  status: ""                         # compliant | non-compliant | partial
+  target_date: ""                    # Target compliance date
+
+documentation:
+  examples: ""                       # Code examples showing correct/incorrect usage
+  references: []                     # Links to external documentation
+  changelog: []                      # History of rule changes
+
+integration:
+  startup_context: false             # Include in DevEnviro startup context
+  claude_instructions: false         # Include in Claude/AI context
+  vscode_settings: false             # Generate VS Code settings
+  pre_commit_hooks: false            # Auto-configure pre-commit hooks
+
+# Optional sections for specific rule types
+
+# For security rules
+security:
+  threat_model: ""
+  risk_level: ""                     # low | medium | high | critical
+  mitigations: []
+
+# For performance rules  
+performance:
+  benchmark: ""
+  target_metrics: {}
+  monitoring: []
+
+# For business rules
+business:
+  stakeholders: []
+  approval_required: false
+  review_cycle: ""                   # How often to review this rule
+
+# For process rules
+process:
+  workflow: ""
+  automation: {}
+  notifications: []
