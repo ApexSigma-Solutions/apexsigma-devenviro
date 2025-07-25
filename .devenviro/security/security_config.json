@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "auto_backup_interval_minutes": 30,
+  "max_backups": 50,
+  "integrity_check_interval_minutes": 15,
+  "auto_monitoring": true,
+  "backup_compression": true,
+  "checksum_algorithm": "sha256",
+  "critical_file_monitoring": true,
+  "cloud_backup_enabled": true,
+  "cloud_backup_path": "/g/My Drive/ApexSigma-Solutions/Backups/DevEnviro",
+  "cloud_backup_providers": {
+    "development": {
+      "type": "local_drive",
+      "path": "/g/My Drive/ApexSigma-Solutions/Backups/DevEnviro",
+      "enabled": true
+    },
+    "production": {
+      "type": "flexible",
+      "providers": [
+        "aws_s3",
+        "azure_blob",
+        "gcp_storage"
+      ],
+      "enabled": false
+    }
+  },
+  "encryption_enabled": false,
+  "last_backup": "2025-07-20T14:02:28.529840",
+  "last_cloud_backup": "2025-07-20T14:02:28.574533",
+  "last_integrity_check": "2025-07-20T13:13:14.548155"
+}

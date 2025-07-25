@@ -1,0 +1,102 @@
+# ApexSigma Global Rules: Dependency Management
+# Version: 1.0
+# Last Updated: 2025-07-20
+# Author: SigmaDev11
+
+rule_type: "global"
+category: "dependency_management"
+priority: "high"
+applies_to: ["all_projects"]
+
+title: "Dependency Version Management Policy"
+
+description: |
+  Standardizes dependency version management across all ApexSigma projects
+  to ensure consistency, security, and maintainability.
+
+rules:
+  - name: "latest_stable_default"
+    description: "Always use latest stable version for new dependencies"
+    requirement: "mandatory"
+    details: |
+      When adding new dependencies to any project:
+      - MUST install the latest stable version unless explicitly authorized
+      - MUST document any version constraints in project documentation
+      - MUST get explicit authorization from SigmaDev11 for non-latest versions
+    
+    examples:
+      valid:
+        - "npm install react@latest"
+        - "pip install fastapi"  # Latest by default
+        - "cargo add serde"      # Latest by default
+      
+      requires_authorization:
+        - "npm install react@17.0.0"  # Specific older version
+        - "pip install django==3.2"   # Pinned older version
+        - "cargo add serde = '1.0.0'"  # Specific version
+    
+    exceptions:
+      - "Security vulnerabilities in latest version"
+      - "Breaking changes that require significant refactoring"
+      - "Framework compatibility requirements (documented)"
+      - "Explicit project requirements from SigmaDev11"
+
+  - name: "version_documentation"
+    description: "Document version constraints and reasoning"
+    requirement: "mandatory"
+    details: |
+      When using non-latest versions:
+      - MUST document the reason in package.json/requirements.txt/Cargo.toml
+      - MUST include review date for constraint removal
+      - MUST reference authorization from SigmaDev11
+    
+    format: |
+      # Version pinned due to [reason] - Authorized by SigmaDev11 [date]
+      # Review for latest upgrade: [review_date]
+
+  - name: "dependency_updates"
+    description: "Regular dependency maintenance"
+    requirement: "recommended"
+    details: |
+      - UPDATE dependencies monthly unless constrained
+      - CHECK for security vulnerabilities weekly
+      - REVIEW pinned versions quarterly
+      - UPGRADE to latest stable when feasible
+
+authorization_process:
+  required_for:
+    - "Using non-latest stable versions"
+    - "Pinning specific versions"
+    - "Downgrading existing dependencies"
+  
+  authorization_source: "SigmaDev11"
+  
+  documentation_required:
+    - "Technical justification"
+    - "Impact assessment"
+    - "Migration timeline (if applicable)"
+    - "Review schedule"
+
+enforcement:
+  - "All AI agents MUST follow this policy"
+  - "Code reviews MUST check version compliance"
+  - "Build systems SHOULD warn on non-latest versions"
+  - "Security scans MUST flag outdated dependencies"
+
+compliance_checks:
+  - "Verify latest versions during project initialization"
+  - "Flag non-latest versions for review"
+  - "Require explicit authorization documentation"
+  - "Regular dependency audit reports"
+
+# Integration with other rules
+integrates_with:
+  - "code-quality-standards.yaml"
+  - "ai-assistance-guidelines.yaml"
+  
+# Change log
+changelog:
+  - version: "1.0"
+    date: "2025-07-20"
+    changes: ["Initial policy creation"]
+    author: "SigmaDev11"

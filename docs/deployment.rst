@@ -64,8 +64,9 @@ Environment Configuration
    pip install -r requirements.txt
    
    # Set environment variables
-   export OPENAI_API_KEY="your_staging_key"
-   export DATABASE_URL="staging_db_connection"
+   export GEMINI_API_KEY="your_staging_gemini_key"
+   export LINEAR_API_KEY="your_staging_linear_key"
+   export QDRANT_URL="http://staging-qdrant:6333"
    
    # Run application
    python code/main.py
@@ -79,8 +80,9 @@ Environment Configuration
    
    # Set production environment variables
    export ENVIRONMENT="production"
-   export OPENAI_API_KEY="your_production_key"
-   export DATABASE_URL="production_db_connection"
+   export GEMINI_API_KEY="your_production_gemini_key"
+   export LINEAR_API_KEY="your_production_linear_key"
+   export QDRANT_URL="http://production-qdrant:6333"
 
 Docker Deployment
 -----------------

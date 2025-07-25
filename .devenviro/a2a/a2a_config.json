@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "message_retention_days": 7,
+  "heartbeat_interval_seconds": 30,
+  "message_poll_interval_seconds": 2,
+  "max_message_size_bytes": 1048576,
+  "enable_encryption": false,
+  "enable_compression": true,
+  "agent_timeout_minutes": 5,
+  "conversation_timeout_hours": 24,
+  "auto_cleanup_enabled": true
+}

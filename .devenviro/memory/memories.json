@@ -1,0 +1,165 @@
+[
+  {
+    "id": "92cbb018-7b9c-439c-ad16-4ea88334cb15",
+    "content": "ApexSigma DevEnviro is a cognitive collaboration platform that transforms AI agents from stateless tools into persistent, organizationally-aware development partners.",
+    "category": "organizational",
+    "importance": 1.0,
+    "timestamp": "2025-07-20T12:54:32.332492",
+    "metadata": {
+      "source": "bootstrap",
+      "type": "mission_statement"
+    },
+    "hash": "d5218e578db16b5f21bb51cf0bfc1cd9"
+  },
+  {
+    "id": "ee913e38-0011-443a-9e32-e8d9005e5499",
+    "content": "Memory engine uses Gemini Flash 2.5 for natural language processing and Qdrant for vector storage with 7 memory categories: factual, procedural, episodic, semantic, organizational, architectural, temporal.",
+    "category": "architectural",
+    "importance": 0.9,
+    "timestamp": "2025-07-20T12:54:32.333676",
+    "metadata": {
+      "source": "bootstrap",
+      "type": "technical_architecture"
+    },
+    "hash": "77763cdbd37fa617432a2c1ede90476c"
+  },
+  {
+    "id": "32c58a5a-bc31-4c56-a1e7-b4735e497271",
+    "content": "Data persistence systems implemented after critical data loss incident. Chat history stored in .devenviro/chat_history/, session restoration triggered by user greetings.",
+    "category": "procedural",
+    "importance": 0.8,
+    "timestamp": "2025-07-20T12:54:32.334765",
+    "metadata": {
+      "source": "bootstrap",
+      "type": "operational_procedure"
+    },
+    "hash": "2c024d1378b9d1d5f90fc38e9159e56b"
+  },
+  {
+    "id": "693a9c44-07cb-4257-be11-eaafc08dcaa6",
+    "content": "Project initialized in C:\\Users\\steyn\\apexsigma-projects, git branch: beta, persistent chat system and rules system operational, memory database restored.",
+    "category": "episodic",
+    "importance": 0.8,
+    "timestamp": "2025-07-20T12:55:16.060177",
+    "metadata": {
+      "source": "project_init",
+      "timestamp": "2025-07-20T12:54:32.334788"
+    },
+    "hash": "5c84c76d5f159d466d28e1c459ec1b8c"
+  },
+  {
+    "id": "8e4900e9-1e06-4014-8eb5-0621aa93301d",
+    "content": "15 open Linear issues including ALPHA2-22 (Build Cognitive Analytics Dashboard), ALPHA2-25 (Strategic Documentation), ALPHA2-15/14 (Cognitive Architecture Implementation)",
+    "category": "organizational",
+    "importance": 0.9,
+    "timestamp": "2025-07-20T12:55:16.061285",
+    "metadata": {
+      "source": "linear_sync",
+      "type": "active_issues"
+    },
+    "hash": "90c578829dbf62fd131f64b4177b1b70"
+  },
+  {
+    "id": "a887e580-da7a-4ed4-abde-5889288eccc0",
+    "content": "Memory engine restoration completed after data loss incident. Simple JSON-based storage operational, chat persistence active, greeting-triggered session restoration functional.",
+    "category": "procedural",
+    "importance": 0.9,
+    "timestamp": "2025-07-20T12:55:16.062157",
+    "metadata": {
+      "source": "session_recovery",
+      "type": "system_status"
+    },
+    "hash": "6bdd8947d5be7dd3007dc3dffd1677aa"
+  },
+  {
+    "id": "63bdd9b0-62cb-4d48-9f2c-d06e2dcab0d3",
+    "content": "Memory manager operational and integrated with DevEnviro workspace",
+    "category": "factual",
+    "importance": 0.7,
+    "timestamp": "2025-07-20T12:55:16.063328",
+    "metadata": {},
+    "hash": "4a8c93fc54e7d6e663d71314963356e8"
+  },
+  {
+    "id": "08660eae-d82d-4069-9f72-89d3025958a3",
+    "content": "Memory database now fully secured with automated backups, integrity checking, and emergency recovery capabilities",
+    "category": "factual",
+    "importance": 0.5,
+    "timestamp": "2025-07-20T13:05:09.828027",
+    "metadata": {
+      "source": "cli",
+      "auto_categorized": true
+    },
+    "hash": "7768bcaf3d2c88b8b150908c800a937b"
+  },
+  {
+    "id": "4e7e0497-d2b8-4a68-a1d8-2c5488ea0b5f",
+    "content": "Test memory for persistence verification at 1753009963.781062",
+    "category": "factual",
+    "importance": 0.8,
+    "timestamp": "2025-07-20T13:12:43.781117",
+    "metadata": {
+      "test": true,
+      "verification": "persistence_test"
+    },
+    "hash": "53bb5cf991e7b7f9a13fa1a5248eea8f"
+  },
+  {
+    "id": "21602e04-cf28-4078-b19d-56b7290ed3a6",
+    "content": "Cross-session test memory 1753009963.8001006",
+    "category": "episodic",
+    "importance": 0.9,
+    "timestamp": "2025-07-20T13:12:43.800126",
+    "metadata": {
+      "session": "first",
+      "test_type": "cross_session"
+    },
+    "hash": "611f73e81232824e25ae09a8d4db511b"
+  },
+  {
+    "id": "69e15fb5-66c9-441d-9329-195360680824",
+    "content": "Concurrent test 1",
+    "category": "factual",
+    "importance": 0.5,
+    "timestamp": "2025-07-20T13:12:43.854445",
+    "metadata": {
+      "source": "engine1"
+    },
+    "hash": "e2c4f8e700ade27df752eba11ff1b7fc"
+  },
+  {
+    "id": "bcea8f05-01a3-4cd6-9f8b-81e99d0022cb",
+    "content": "Test memory for persistence verification at 1753009994.4896834",
+    "category": "factual",
+    "importance": 0.8,
+    "timestamp": "2025-07-20T13:13:14.489730",
+    "metadata": {
+      "test": true,
+      "verification": "persistence_test"
+    },
+    "hash": "5cce02a8f0bcd844cd7c2273719d0bcb"
+  },
+  {
+    "id": "45160621-883f-4bf1-bfeb-368d2ddb53ea",
+    "content": "Cross-session test memory 1753009994.509796",
+    "category": "episodic",
+    "importance": 0.9,
+    "timestamp": "2025-07-20T13:13:14.509840",
+    "metadata": {
+      "session": "first",
+      "test_type": "cross_session"
+    },
+    "hash": "161c90add1d793b3c8a4d8647f0200f2"
+  },
+  {
+    "id": "6ac100a1-7f51-4cef-8be5-26b051d48b36",
+    "content": "Concurrent test 1",
+    "category": "factual",
+    "importance": 0.5,
+    "timestamp": "2025-07-20T13:13:14.573260",
+    "metadata": {
+      "source": "engine1"
+    },
+    "hash": "e2c4f8e700ade27df752eba11ff1b7fc"
+  }
+]

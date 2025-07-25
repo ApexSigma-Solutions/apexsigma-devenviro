@@ -112,10 +112,34 @@ class DevEnviroStartup:
         home_dir = Path.home()
         projects_dirs = [
             home_dir / "Projects",
-            home_dir / "projects", 
-            Path("C:/Users/steyn/apexsigma-projects"),
-            Path("C:/Users/steyn/Projects")
+            home_dir / "projects"
         ]
+        
+        # Add configurable project paths from environment variables
+        if os.environ.get('DEVENVIRO_PROJECT_PATHS'):
+            env_paths = os.environ['DEVENVIRO_PROJECT_PATHS'].split(os.pathsep)
+            for path_str in env_paths:
+                path = Path(path_str)
+                if path.exists():
+                    projects_dirs.append(path)
+        
+        # Platform-specific defaults
+        import platform
+        if platform.system() == "Windows":
+            # Add common Windows project locations
+            username = os.environ.get('USERNAME', 'user')
+            projects_dirs.extend([
+                Path(f"C:/Users/{username}/apexsigma-projects"),
+                Path(f"C:/Users/{username}/Projects")
+            ])
+        else:
+            # Add common Unix/Linux project locations
+            projects_dirs.extend([
+                home_dir / "Development",
+                home_dir / "dev",
+                Path("/opt/projects"),
+                Path("/workspace")
+            ])
         
         for projects_dir in projects_dirs:
             if projects_dir.exists():
@@ -416,9 +440,35 @@ class DevEnviroStartup:
         if tasks:
             print("[TASKS] Unfinished Tasks:")
             for i, task in enumerate(tasks, 1):
-                priority_icon = {"high": "[HIGH]", "medium": "[MED]", "low": "[LOW]"}.get(task["priority"], "[NONE]")
-                print(f"   {i}. {priority_icon} {task['task']}")
-                print(f"      Source: {task['source']} | {task['timestamp'].strftime('%Y-%m-%d %H:%M')}")
+                try:
+                    # Validate task data structure
+                    if not isinstance(task, dict):
+                        print(f"   {i}. [ERROR] Malformed task data: {task}")
+                        continue
+                    
+                    task_content = task.get('task', 'Unknown task')
+                    task_priority = task.get('priority', 'unknown')
+                    task_source = task.get('source', 'unknown')
+                    task_timestamp = task.get('timestamp')
+                    
+                    priority_icon = {"high": "[HIGH]", "medium": "[MED]", "low": "[LOW]", "urgent": "[URGENT]"}.get(task_priority, "[NONE]")
+                    print(f"   {i}. {priority_icon} {task_content}")
+                    
+                    # Handle timestamp formatting safely
+                    if task_timestamp:
+                        try:
+                            if isinstance(task_timestamp, str):
+                                timestamp = datetime.fromisoformat(task_timestamp.replace('Z', '+00:00'))
+                            else:
+                                timestamp = task_timestamp
+                            print(f"      Source: {task_source} | {timestamp.strftime('%Y-%m-%d %H:%M')}")
+                        except (ValueError, AttributeError) as e:
+                            print(f"      Source: {task_source} | Invalid timestamp")
+                    else:
+                        print(f"      Source: {task_source} | No timestamp")
+                        
+                except Exception as e:
+                    print(f"   {i}. [ERROR] Failed to display task: {e}")
             print()
         else:
             print("[SUCCESS] No unfinished tasks detected")
@@ -450,7 +500,12 @@ class DevEnviroStartup:
         print("\nSelect an option (1-7):", end=" ")
         
         try:
-            choice = input().strip()
+            # Check for non-interactive mode
+            if os.environ.get('DEVENVIRO_NON_INTERACTIVE') == '1':
+                choice = os.environ.get('DEVENVIRO_AUTO_EXIT', '7')
+                print(choice)  # Show the auto-selected choice
+            else:
+                choice = input().strip()
             await self._handle_menu_choice(choice, project_info, session_context)
         except KeyboardInterrupt:
             print("\n[EXIT] Startup cancelled")
@@ -460,6 +515,18 @@ class DevEnviroStartup:
     async def _handle_menu_choice(self, choice: str, project_info: Dict, session_context: Dict):
         """Handle user menu selection"""
         print()
+        
+        # Validate menu choice
+        if not choice or not choice.strip():
+            print("[ERROR] Empty choice provided")
+            return
+            
+        choice = choice.strip()
+        valid_choices = ["1", "2", "3", "4", "5", "6", "7"]
+        
+        if choice not in valid_choices:
+            print(f"[ERROR] Invalid choice '{choice}'. Please select 1-7.")
+            return
         
         if choice == "1":
             print("[CONTINUE] Continuing in current project...")
@@ -510,16 +577,23 @@ class DevEnviroStartup:
         
         print(f"\nSelect project (1-{len(projects)}):", end=" ")
         try:
-            choice = int(input().strip())
+            user_input = input().strip()
+            if not user_input:
+                print("[ERROR] No input provided")
+                return
+                
+            choice = int(user_input)
             if 1 <= choice <= len(projects):
                 selected = projects[choice - 1]
                 print(f"[SWITCH] Switching to {selected['name']}...")
                 print(f"   cd {selected['path']}")
                 # Note: Actual directory change would need to be handled by calling script
             else:
-                print("[ERROR] Invalid project selection")
-        except (ValueError, KeyboardInterrupt):
-            print("[ERROR] Invalid input")
+                print(f"[ERROR] Invalid project selection. Please choose between 1 and {len(projects)}.")
+        except ValueError:
+            print("[ERROR] Please enter a valid number")
+        except KeyboardInterrupt:
+            print("\n[ERROR] Selection cancelled")
     
     async def _create_new_project_menu(self):
         """Create new project workflow"""
@@ -528,13 +602,24 @@ class DevEnviroStartup:
         
         try:
             project_name = input().strip()
-            if project_name:
-                print(f"[CREATE] Creating project: {project_name}")
-                subprocess.run([sys.executable, "devenviro.py", "new", "project", project_name])
-            else:
+            if not project_name:
                 print("[ERROR] Project name cannot be empty")
+                return
+                
+            # Validate project name format
+            import re
+            if not re.match(r'^[a-zA-Z0-9_-]+$', project_name):
+                print("[ERROR] Project name can only contain letters, numbers, hyphens, and underscores")
+                return
+                
+            if len(project_name) > 50:
+                print("[ERROR] Project name too long (max 50 characters)")
+                return
+                
+            print(f"[CREATE] Creating project: {project_name}")
+            subprocess.run([sys.executable, "devenviro.py", "new", "project", project_name])
         except KeyboardInterrupt:
-            print("[ERROR] Project creation cancelled")
+            print("\n[ERROR] Project creation cancelled")
 
 
 async def main():

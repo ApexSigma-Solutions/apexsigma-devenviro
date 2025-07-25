@@ -12,9 +12,9 @@ Basic Usage
 
    from code.test_mem0 import test_mem0_setup
    
-   # Test the memory system
+   # Test the Gemini memory system
    result = test_mem0_setup()
-   print(f"Memory system status: {'✅ Working' if result else '❌ Failed'}")
+   print(f"Memory system status: {'[SUCCESS] Working' if result else '[ERROR] Failed'}")
 
 2. **Run All Tests:**
 
@@ -39,24 +39,22 @@ Core Components
 ---------------
 
 **Memory System:**
-The project uses Mem0 with Qdrant for long-term memory storage:
+The project uses native Gemini 2.5 Flash with Qdrant for persistent organizational memory:
 
 .. code-block:: python
 
-   from mem0 import Memory
+   from devenviro.gemini_memory_engine import GeminiMemoryEngine
    
-   config = {
-       "vector_store": {
-           "provider": "qdrant",
-           "config": {
-               "host": "localhost",
-               "port": 6333,
-               "collection_name": "apexsigma-memory"
-           }
-       }
-   }
+   # Initialize Gemini memory engine
+   memory_engine = GeminiMemoryEngine(
+       config_path=".devenviro/config.json"
+   )
    
-   memory = Memory.from_config(config)
+   # Store memories with automatic categorization
+   await memory_engine.store_memory(
+       content="Technical implementation detail",
+       metadata={"category": "procedural", "importance": 0.8}
+   )
 
 **Error Tracking:**
 Monitor application health and performance:
@@ -125,9 +123,9 @@ Configuration
 
 **Environment Variables:**
 
-- ``OPENAI_API_KEY``: Required for AI functionality
-- ``LINEAR_API_KEY``: For Linear integration
-- ``DATABASE_URL``: Database connection string
+- ``GEMINI_API_KEY``: Required for Gemini 2.5 Flash memory engine
+- ``LINEAR_API_KEY``: For Linear integration and project management
+- ``QDRANT_URL``: Vector database connection (default: localhost:6333)
 
 **Project Structure:**
 

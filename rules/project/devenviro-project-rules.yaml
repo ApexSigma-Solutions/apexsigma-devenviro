@@ -1,0 +1,199 @@
+meta:
+  name: "devenviro-project-rules"
+  version: "1.0.0"
+  category: "project"
+  level: "project"
+  description: "Project-specific rules for ApexSigma DevEnviro"
+  author: "ApexSigma Solutions"
+  created: "2025-07-19"
+  updated: "2025-07-19"
+  tags: ["devenviro", "memory", "cognitive", "architecture"]
+
+policy:
+  summary: "DevEnviro-specific development standards and architectural guidelines"
+  rationale: |
+    DevEnviro is a cognitive collaboration platform that requires special considerations
+    for memory management, AI integration, and cross-project learning capabilities.
+  scope: "ApexSigma DevEnviro project files"
+  impact: "Ensures DevEnviro maintains its cognitive architecture integrity"
+
+architecture_rules:
+  - id: "memory-engine-integration"
+    severity: "error"
+    message: "All components must be compatible with Gemini 2.5 Flash memory engine"
+    description: "Maintain memory engine integration points"
+    
+  - id: "cross-project-learning"
+    severity: "warning"
+    message: "Consider cross-project learning implications in new features"
+    description: "Preserve organizational memory capabilities"
+    
+  - id: "session-continuity"
+    severity: "error"
+    message: "Features must support session continuity and restoration"
+    description: "Maintain session state management"
+
+project_structure:
+  core_directories:
+    - ".devenviro/"          # Core DevEnviro configuration and data
+    - "devenviro/"           # Main DevEnviro module
+    - "rules/"               # Hierarchical rules system
+    - "cognitive_dashboard/" # Analytics and memory interface
+    - "docs/"               # Project documentation
+    
+  required_files:
+    - "CLAUDE.md"           # Claude agent instructions
+    - "GEMINI.md"           # Gemini agent instructions  
+    - "devenviro.py"        # Main DevEnviro CLI
+    - "launch_claude.py"    # Claude Code integration
+    - "launch_gemini.py"    # Gemini CLI integration
+
+memory_management_rules:
+  categorization:
+    - "Use 7 memory categories: factual, procedural, episodic, semantic, organizational, architectural, temporal"
+    - "Apply importance scoring (0.0-1.0) to all memories"
+    - "Implement decay management for temporal relevance"
+    
+  storage_patterns:
+    - "Project memories in .devenviro/memory/"
+    - "Global memories accessible across projects"
+    - "Session state in .devenviro/last_session.json"
+    - "Vector embeddings in Qdrant database"
+    
+  performance_targets:
+    - "Memory extraction: < 6 seconds"
+    - "Memory storage: < 50ms"
+    - "Memory search: < 10 seconds"
+    - "System health check: < 5 seconds"
+
+cognitive_collaboration_rules:
+  ai_integration:
+    - "Support both Claude Code and Gemini CLI workflows"
+    - "Provide context-aware startup for AI assistants"
+    - "Include rules system in AI agent context"
+    - "Maintain session continuity across AI interactions"
+    
+  organizational_learning:
+    - "Extract architectural patterns for reuse"
+    - "Identify cross-project learning opportunities"
+    - "Maintain consistency across ApexSigma projects"
+    - "Update organizational memory with strategic decisions"
+
+startup_system_rules:
+  initialization_modes:
+    required_modes:
+      - "global"      # Global workspace initialization
+      - "project"     # Project workspace initialization  
+      - "new project" # New project creation
+      - "min"         # Minimal initialization
+      - "full"        # Full system initialization
+      - "install"     # System-wide installation
+      
+  session_management:
+    - "Session signoff must capture complete state"
+    - "Session restoration must provide relevant context"
+    - "Support multiple concurrent projects"
+    - "Maintain task continuity across sessions"
+
+dashboard_requirements:
+  core_functions:
+    - "Memory search interface with semantic capabilities"
+    - "Knowledge upload and training interface"
+    - "System analytics and health monitoring"
+    - "Cross-project navigation and switching"
+    
+  technology_stack:
+    - "Primary: FrameFox + FastAPI (Phase 1)"
+    - "Migration target: SvelteKit (Phase 2)"
+    - "Memory backend: Gemini 2.5 Flash + Qdrant"
+    - "Real-time updates via WebSocket connections"
+
+terminal_compatibility:
+  unicode_policy:
+    - "Strict Unicode policy compliance required"
+    - "Use devenviro.terminal_output.safe_print() for all output"
+    - "Test Windows terminal compatibility"
+    - "Provide text equivalents for all visual indicators"
+
+error_handling_patterns:
+  graceful_degradation:
+    - "Continue operation if memory engine unavailable"
+    - "Provide fallback options for missing components"
+    - "Clear error messages with recovery suggestions"
+    - "Log errors with sufficient context for debugging"
+    
+  health_monitoring:
+    - "Regular health checks for all components"
+    - "Performance metric collection and reporting"
+    - "Automatic recovery mechanisms where possible"
+    - "Alert on critical system failures"
+
+testing_requirements:
+  memory_engine_tests:
+    - "Test memory extraction, storage, and retrieval"
+    - "Validate cross-project memory isolation"
+    - "Test session continuity and restoration"
+    - "Performance benchmarking for target metrics"
+    
+  integration_tests:
+    - "Test Claude Code and Gemini CLI integration"
+    - "Validate startup sequence reliability"
+    - "Test dashboard functionality end-to-end"
+    - "Cross-platform compatibility testing"
+
+documentation_standards:
+  required_documentation:
+    - "Architecture decisions and rationale"
+    - "Memory categorization and importance scoring"
+    - "Performance benchmarks and optimization notes"
+    - "Integration guides for new projects"
+    
+  user_guides:
+    - "Getting started with DevEnviro"
+    - "Memory management best practices"
+    - "Cognitive dashboard usage"
+    - "Troubleshooting common issues"
+
+security_considerations:
+  data_protection:
+    - "Encrypt sensitive memories at rest"
+    - "Secure transmission of memory data"
+    - "Access control for organizational memories"
+    - "Audit logging for memory operations"
+    
+  api_security:
+    - "Authenticate all API requests"
+    - "Rate limiting for memory operations"
+    - "Input validation for all endpoints"
+    - "Secure session management"
+
+performance_optimization:
+  caching_strategy:
+    - "Cache frequently accessed memories"
+    - "Implement memory search result caching"
+    - "Background refresh of stale cache entries"
+    - "Memory-efficient vector storage"
+    
+  scalability:
+    - "Design for multiple concurrent users"
+    - "Efficient memory indexing and search"
+    - "Horizontal scaling capabilities"
+    - "Resource usage monitoring and optimization"
+
+enforcement:
+  pre_commit: true
+  ci_cd: true
+  real_time: true
+  ide_integration: true
+  
+  validation:
+    - "Memory engine integration tests"
+    - "Session continuity validation"
+    - "Performance benchmark compliance"
+    - "Cross-project learning capability tests"
+
+integration:
+  startup_context: true
+  claude_instructions: true
+  vscode_settings: true
+  pre_commit_hooks: true

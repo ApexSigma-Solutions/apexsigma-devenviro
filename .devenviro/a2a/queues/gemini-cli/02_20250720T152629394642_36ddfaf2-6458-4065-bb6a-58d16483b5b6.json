@@ -1,0 +1,21 @@
+{
+  "id": "36ddfaf2-6458-4065-bb6a-58d16483b5b6",
+  "sender_agent": "claude-code",
+  "target_agent": "gemini-cli",
+  "message_type": "request",
+  "priority": 2,
+  "content": {
+    "text": "Hello Gemini! This should notify you instantly.",
+    "test": "real_time_notification",
+    "timestamp": "2025-07-20T15:30:00"
+  },
+  "timestamp": "2025-07-20T15:26:29.394642",
+  "expires_at": "2025-07-20T16:26:29.394642",
+  "conversation_id": null,
+  "requires_response": true,
+  "response_timeout": 300,
+  "delivery_attempts": 0,
+  "max_delivery_attempts": 3,
+  "delivered": false,
+  "acknowledged": false
+}

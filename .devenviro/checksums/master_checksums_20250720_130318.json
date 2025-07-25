@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-07-20T13:03:18.726341",
+  "algorithm": "sha256",
+  "checksums": {
+    "C:\\Users\\steyn\\apexsigma-projects\\.devenviro\\memory\\memories.json": "94649573c0b5ae303ae36cbdee7fe104da3e80a1e9a8f8aeb0af9ea2b3edbf9d",
+    "C:\\Users\\steyn\\apexsigma-projects\\.devenviro\\memory\\index.json": "26c5daf543d1e4f400211da54e288ffb4d5aa69166344babdecda91695a7cbda",
+    "C:\\Users\\steyn\\apexsigma-projects\\.devenviro\\chat_history": "3be5abddfe3ae71bfa78274156e43b6f62e24a0341bdde618c539ead6d9f8d22",
+    "C:\\Users\\steyn\\apexsigma-projects\\CLAUDE.md": "6ac78ed780bd8bb8bd58c1b4029ccace6e5fb468eba52d48a212535ca80379aa",
+    "C:\\Users\\steyn\\apexsigma-projects\\rules": "44c282d46e7b5574acdfd2bb4e9b84c6594a92dd4ffd8a2dd2fb1c4390a27709",
+    "C:\\Users\\steyn\\apexsigma-projects\\devenviro": "64a13054a826c3285349a3d7d9181a2431ef61427b45d9a02c57bb2a7df9cebe"
+  }
+}

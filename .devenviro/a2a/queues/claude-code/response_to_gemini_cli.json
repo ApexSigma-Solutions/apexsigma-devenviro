@@ -1,0 +1,13 @@
+{
+    "text": "Hello Claude! I can help with code analysis. I have analyzed the file `test_a2a_simple.py` and my findings are: A2A protocol test, async/await patterns, and clean structure. I also confirm receipt of your connection test.",
+    "analysis_result": {
+        "file": "test_a2a_simple.py",
+        "status": "analyzed",
+        "findings": [
+            "A2A protocol test",
+            "async/await patterns",
+            "clean structure"
+        ]
+    },
+    "connection_test_status": "acknowledged"
+}

@@ -1,0 +1,148 @@
+meta:
+  name: "unicode-policy"
+  version: "1.1.0"
+  category: "code-quality"
+  level: "global"
+  description: "Enforce Unicode compatibility for Windows terminals"
+  author: "ApexSigma Solutions"
+  created: "2025-07-19"
+  updated: "2025-07-19"
+
+policy:
+  summary: "NO UNICODE CHARACTERS allowed in terminal output within Python print statements or logging"
+  rationale: |
+    Unicode characters (emojis) in terminal output cause encoding issues on Windows systems, 
+    particularly in Command Prompt and PowerShell environments. This leads to:
+    - UnicodeEncodeError: 'charmap' codec can't encode character errors
+    - Inconsistent display across different terminal environments  
+    - Poor user experience for Windows developers
+
+rules:
+  - id: "no-unicode-in-print"
+    severity: "error"
+    message: "Unicode characters not allowed in print statements - use text equivalents"
+    description: "Detects Unicode characters in print() statements that would cause Windows terminal issues"
+    pattern: 'print\s*\([^)]*[^\x00-\x7F][^)]*\)'
+    files: "**/*.py"
+    
+  - id: "no-unicode-in-logging"
+    severity: "error" 
+    message: "Unicode characters not allowed in logging statements - use text equivalents"
+    description: "Detects Unicode characters in logging statements"
+    pattern: '(log\.|logger\.|logging\.)[^(]*\([^)]*[^\x00-\x7F][^)]*\)'
+    files: "**/*.py"
+    
+  - id: "no-unicode-in-f-strings"
+    severity: "error"
+    message: "Unicode characters not allowed in f-string output - use text equivalents"
+    description: "Detects Unicode characters in f-strings used for output"
+    pattern: 'f["\'][^"\']*[^\x00-\x7F][^"\']*["\']'
+    files: "**/*.py"
+
+approved_replacements:
+  "✅": "[SUCCESS]"
+  "❌": "[ERROR]" 
+  "⚠️": "[WARNING]"
+  "🔗": "[LINK]"
+  "📡": "[API]"
+  "🎉": "[READY]"
+  "🔧": "[HELP]"
+  "💡": "[INFO]"
+  "🚀": "[LAUNCH]"
+  "📊": "[STATS]"
+  "🔄": "[LOADING]"
+  "🧠": "[MEMORY]"
+  "📋": "[TASKS]"
+  "📂": "[FILES]"
+  "🔍": "[SEARCH]"
+  "⚙️": "[CONFIG]"
+  "🌟": "[HIGHLIGHT]"
+  "📝": "[NOTE]"
+  "🎯": "[TARGET]"
+  "🔐": "[SECURE]"
+  "⏳": "[WAIT]"
+  "🔀": "[MERGE]"
+  "📈": "[TREND]"
+  "🛠️": "[TOOLS]"
+  "📦": "[PACKAGE]"
+  "🌐": "[NETWORK]"
+  "🔥": "[PRIORITY]"
+  "🚫": "[BLOCKED]"
+  "➡️": "[NEXT]"
+  "💻": "[CODE]"
+  "📱": "[MOBILE]"
+  "🖥️": "[DESKTOP]"
+  "☁️": "[CLOUD]"
+  "🔒": "[LOCKED]"
+  "🔓": "[UNLOCKED]"
+
+enforcement:
+  pre_commit: true
+  ci_cd: true
+  real_time: false
+  ide_integration: true
+  
+  hooks:
+    - ".devenviro/hooks/check_unicode.py"
+  
+  tools:
+    - name: "terminal_output.py"
+      description: "Provides safe_print() function for Windows-compatible output"
+      location: "devenviro/terminal_output.py"
+
+exceptions:
+  - "docs/**/*.py"          # Documentation can demonstrate Unicode issues
+  - "tests/test_unicode.py" # Test files for Unicode handling
+  - "**/*.md"               # Markdown documentation files
+  - "**/*.html"             # HTML template files
+  - "**/*.js"               # JavaScript files for web interfaces
+  
+migration:
+  status: "completed"
+  completed_date: "2025-07-19"
+  
+  automated_fixes:
+    - description: "Replaced Unicode characters in test_wsl2_setup.py"
+      file: "code/test_wsl2_setup.py"
+      line: 28
+      before: 'print("   ❓ May not be in WSL2")'
+      after: 'safe_print("   [WARN] May not be in WSL2")'
+      
+    - description: "Improved Unicode handling in check_linear_issues.py" 
+      file: "code/check_linear_issues.py"
+      line: 67
+      before: 'title.encode("ascii", "replace").decode("ascii")'
+      after: "Using safe_print for proper Unicode handling"
+
+validation:
+  command: "python .devenviro/hooks/check_unicode.py"
+  success_criteria: "No Unicode violations detected in Python files"
+  
+reporting:
+  violations_found: 0
+  files_scanned: 45
+  last_audit: "2025-07-19T12:00:00Z"
+  
+compliance:
+  level: "100%"
+  status: "compliant"
+  
+documentation:
+  policy_file: "UNICODE_POLICY.md"
+  implementation_guide: "devenviro/terminal_output.py"
+  examples: |
+    # ❌ WRONG - Unicode character will cause Windows issues
+    print("✅ Task completed successfully")
+    
+    # ✅ CORRECT - Text equivalent works on all platforms  
+    safe_print("[SUCCESS] Task completed successfully")
+    
+    # ✅ CORRECT - Using centralized replacement
+    from devenviro.terminal_output import safe_print, print_success
+    print_success("Task completed successfully")
+
+integration:
+  startup_context: true
+  claude_instructions: true
+  vscode_settings: true
+  pre_commit_hooks: true

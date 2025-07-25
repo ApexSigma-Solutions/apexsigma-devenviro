@@ -5,5 +5,14 @@
   "project_root": "C:\\Users\\steyn\\apexsigma-projects",
   "memory_engine": "gemini-2.5-flash",
   "initialized": true,
-  "created_at": "C:\\Users\\steyn\\apexsigma-projects"
+  "created_at": "C:\\Users\\steyn\\apexsigma-projects",
+  "chat_persistence": {
+    "enabled": true,
+    "max_sessions": 100,
+    "auto_backup": true,
+    "backup_interval_hours": 24,
+    "compression": false
+  },
+  "current_session": "session_20250720_122723",
+  "last_backup": null
 }

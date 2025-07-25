@@ -83,3 +83,22 @@ tmp/
 temp/
 *.tmp
 *.temp
+
+# DevEnviro operational files
+.devenviro/backups/
+.devenviro/checksums/
+.devenviro/security/audit.log
+.devenviro/security/integrity.log
+.ai-cli-log/
+
+# Generated reports and temp files  
+MEMORY_VERIFICATION_REPORT.md
+PROJECT_STATE_ASSESSMENT.md
+check_linear_simple.py
+verify_memory_persistence.py
+
+# Repomix output
+.repomix/
+
+# Invalid filenames
+"C*"

@@ -57,12 +57,13 @@ This includes:
 Environment Variables
 ---------------------
 
-Create a `.env` file in the project root:
+Create a `.env` file in `config/secrets/.env`:
 
 .. code-block:: bash
 
-   OPENAI_API_KEY=your_openai_api_key_here
+   GEMINI_API_KEY=your_gemini_api_key_here
    LINEAR_API_KEY=your_linear_api_key_here
+   QDRANT_URL=http://localhost:6333
 
 **Important:** Never commit the `.env` file to version control. It's already included in `.gitignore`.
 
@@ -73,9 +74,16 @@ Test your installation:
 
 .. code-block:: bash
 
+   # Test Gemini memory engine
    python code/test_mem0.py
+   
+   # Test DevEnviro startup
+   python devenviro_startup.py
+   
+   # Quick task status
+   python quick_tasks.py
 
-This should run without errors if everything is set up correctly.
+These should run without errors if everything is set up correctly.
 
 Docker Setup (Optional)
 ------------------------
