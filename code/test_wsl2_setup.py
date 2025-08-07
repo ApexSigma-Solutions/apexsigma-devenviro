@@ -6,12 +6,12 @@ import os
 import platform
 import subprocess
 from pathlib import Path
-from devenviro.terminal_output import print_success, print_error, print_warning, safe_print, print_section_header
+from devenviro.terminal_output import print_success, print_error, print_warning, safe_print, print_info
 
 
 def test_wsl2_environment():
     """Test our WSL2 development environment"""
-    print_section_header("[TEST] Testing WSL2 ApexSigma DevEnviro Setup")
+    print_info("[TEST] Testing WSL2 ApexSigma DevEnviro Setup")
 
     # Check we're in WSL2
     safe_print("[SYSTEM] Environment Check:")
